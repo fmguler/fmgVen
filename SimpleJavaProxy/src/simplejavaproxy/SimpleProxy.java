@@ -54,19 +54,23 @@ package simplejavaproxy;
 import java.io.*;
 import java.net.*;
 import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleProxy extends Thread {
-
     public static final int DEFAULT_PORT = 8080;
     private ServerSocket server = null;
     private int thisPort = DEFAULT_PORT;
     private String fwdServer = "";
     private int fwdPort = 0;
     private int ptTimeout = ProxyThread.DEFAULT_TIMEOUT;
-    private int debugLevel = 0;
+    private int debugLevel = 1;
     private PrintStream debugOut = System.out;
     //FMG>>
     public static String safariKey = "";
+    public static Map cookieMap = new ConcurrentHashMap();
 
 
     /* here's a main method, in case you want to run this by itself */
@@ -225,7 +229,6 @@ public class SimpleProxy extends Thread {
  * trying to contact, or another proxy server
  */
 class ProxyThread extends Thread {
-
     private Socket pSocket;
     private String fwdServer = "";
     private int fwdPort = 0;
@@ -351,7 +354,7 @@ class ProxyThread extends Thread {
             // if the user wants debug info, send them debug info; however,
             // keep in mind that because we're using threads, the output won't
             // necessarily be synchronous
-            if (debugLevel > 0) {
+            if (debugLevel > 5) {
                 long endTime = System.currentTimeMillis();
                 debugOut.println("Request from " + pSocket.getInetAddress().getHostAddress()
                         + " on Port " + pSocket.getLocalPort()
@@ -361,7 +364,7 @@ class ProxyThread extends Thread {
                         + Long.toString(endTime - startTime) + " ms elapsed)");
                 debugOut.flush();
             }
-            if (debugLevel > 1) {
+            if (debugLevel > 10) {
                 debugOut.println("REQUEST:\n" + (new String(request)));
                 debugOut.println("RESPONSE:\n" + (new String(response)));
                 debugOut.flush();
@@ -415,6 +418,7 @@ class ProxyThread extends Thread {
         int contentLength = 0;
         int pos = -1;
         int byteCount = 0;
+        String originalCookies = null;
 
         try {
             // get the first line of the header, so we know the response code
@@ -456,9 +460,8 @@ class ProxyThread extends Thread {
                 }
 
                 //**************************************************************
-                //FMG>>: cookie al, Cookie: ya da Set-Cookie: header'larını al.
-                //Cookie içindeki Safari->key değerini olması gerekenle değiştir (safariKey)
-                //Set-Cookie ile gelen Safari->key değerini güncelle (safariKey)
+                //FMG>>: simulate browser (User Agent) cookie behaviour
+                //We want the server beleive that we are a single browser.
 
                 //Set-Cookie: Safari=cookieversion=2&portal=my&key=E894F897E4A4912E6D683D6939BE74D192731C8F4191A3ACAB6B3FEE16588D2954DBF3B9BF495294EE68A4477E3D772EAA5B0E89433D9926603960942389D153574A4D8BAB4095687832999AECDC2C751104CB8D1A30141A9BCD769E3A126390FFDD02DA9C28307232CD000C64D4F0C3D2993A357CCBED2A19E0467900E3884D71&sessionid=1a923806-a923-4442-9579-325c77ae39db&ref=Google&logged=true&oref=http%3a%2f%2fwww.google.com.tr%2furl%3fsa%3dt%26source%3dweb%26ct%3dres%26cd%3d1%26ved%3d0CAYQFjAA%26url%3dhttp%253A%252F%252Fmy.safaribooksonline.com%252F%26rct%3dj%26q%3dsafari%2bbook%26ei%3d2ZHNS_XcBIX0ObjplcwP%26usg%3dAFQjCNFeqvBpwDvMtcrCBnfHPPiUQofzPA; Path=/; Domain=my.safaribooksonline.com
                 //Cookie: __utmv=77706120.B2C-BS-10-M-X; __utma=77706120.1457821667.1270626763.1271763865.1271767431.4; __utmb=77706120; __utmz=77706120.1271763865.3.2.utmccn=(organic)|utmcsr=google|utmctr=safari+book|utmcmd=organic; Safari=cookieversion=2&portal=my&key=E894F897E4A4912E6D683D6939BE74D192731C8F4191A3ACAB6B3FEE16588D2954DBF3B9BF495294EE68A4477E3D772EAA5B0E89433D9926603960942389D153574A4D8BAB4095687832999AECDC2C751104CB8D1A30141A9BCD769E3A126390FFDD02DA9C28307232CD000C64D4F0C3D2993A357CCBED2A19E0467900E3884D71&sessionid=1a923806-a923-4442-9579-325c77ae39db&ref=Google&logged=true&oref=http%3a%2f%2fwww.google.com.tr%2furl%3fsa%3dt%26source%3dweb%26ct%3dres%26cd%3d1%26ved%3d0CAYQFjAA%26url%3dhttp%253A%252F%252Fmy.safaribooksonline.com%252F%26rct%3dj%26q%3dsafari%2bbook%26ei%3d2ZHNS_XcBIX0ObjplcwP%26usg%3dAFQjCNFeqvBpwDvMtcrCBnfHPPiUQofzPA; __utmc=77706120; State=aph=LGOjKGanGVMDHURjGSHANHTCDRCFICGGFLNRPYPXOXVNCCJKAAWOeKHTXMIS&uicode=&PromoCode=my_promo_10&itemsperpage=10&savekey=CB68946AF5AC267A97B7C73B7F8A341F83A137D7B0C6094366303123865F960DD622F95860088400226D1FB16FFCF62ED34A33EFF50B6CC3&HttpReferrer=http%3a%2f%2fmy.safaribooksonline.com%2f0201835959&reader=&action=20&search=safari+book&view=book&displaygrbooks=1&xmlid=0201835959%2f5&isbn=0201835959&omniturexmlidown=1&imagepage=5&portal=my; s_cc=true; s_sq=%5B%5BB%5D%5D
@@ -467,48 +470,29 @@ class ProxyThread extends Thread {
                 pos = data.toLowerCase().indexOf("set-cookie:");
                 if (pos >= 0) {
                     String setCookie = data.substring(pos + 11).trim();
-                    int safariKeyIndexStart = setCookie.indexOf("&key=") + 5;
-                    int safariKeyIndexEnd = setCookie.indexOf("&", safariKeyIndexStart);
-
-                    if (safariKeyIndexStart >= 5) { //YAP: add extra controls, key cookie may be present in other sites as well. may be limit this to safari host
-                        //get the key from response header
-                        String key = setCookie.substring(safariKeyIndexStart, safariKeyIndexEnd);
-                        SimpleProxy.safariKey = key;
-                        System.out.println("Safari Key in the set-cookie is: " + SimpleProxy.safariKey);
-                    }
+                    handleSetCookie(setCookie);
                 }
 
-                // check for the Cookie header
+                //YAP: cookie headerını iptal et, aşağıda biz gönderiyoruz çünkü
                 pos = data.toLowerCase().indexOf("cookie:");
                 if (pos >= 0) {
-                    boolean logged = false;
-
-                    int loggedStart = data.indexOf("&logged=") + 8;
-                    int loggedEnd = data.indexOf("&", loggedStart);
-                    if (loggedStart >= 8) {
-                        logged = data.substring(loggedStart, loggedEnd).equals("true");
-                    }
-
-                    int safariKeyIndexStart = data.indexOf("&key=") + 5;
-                    int safariKeyIndexEnd = data.indexOf("&", safariKeyIndexStart);
-
-                    if (logged && (safariKeyIndexStart >= 5)) { //YAP: add extra controls, key cookie may be present in other sites as well. may be limit this to safari host
-                        //replace the key in the cookie with safariKey
-                        String cookie1 = data.substring(0, safariKeyIndexStart); //first part
-                        String cookie2 = data.substring(safariKeyIndexEnd); //remaining part
-
-                        System.out.println("Old cookie:        '" + data + "'");
-                        data = (cookie1 + SimpleProxy.safariKey + cookie2);
-                        System.out.println("Changed cookie to: '" + data + "'");
-                    }
+                    //we do not send original cookies
+                    originalCookies = data.substring(pos + 7);
+                } else {
+                    header.append(data + "\r\n");
                 }
 
                 //<<FMG
                 //**************************************************************
-
-                header.append(data + "\r\n");
-                data = "";
             }
+
+            //FMG>>
+            //lastly send cookie if applicable for this host
+            String cookie = getCookiesForHost(host.toString());
+            if (cookie != null) header.append(cookie + "\r\n");
+            if (originalCookies != null) System.out.println("\t _ookie:" + originalCookies);
+            if (cookie == null && originalCookies != null) header.append("Cookie: " + originalCookies + "\r\n");
+            //<<FMG
 
             // add a blank line to terminate the header info
             header.append("\r\n");
@@ -583,7 +567,7 @@ class ProxyThread extends Thread {
                 if ((c == 0) || (c == 10) || (c == 13)) {
                     break;
                 } else {
-                    data.append((char) c);
+                    data.append((char)c);
                 }
             }
 
@@ -603,5 +587,88 @@ class ProxyThread extends Thread {
 
         // and return what we have
         return data.toString();
+    }
+
+    //FMG>>
+    //We are simulating the User Agent role as in RFC2965
+    //the cookies coming from server, for a host
+    private void handleSetCookie(String setCookie) {
+        //global cookie map for each domain
+        Map cookieMap = SimpleProxy.cookieMap;
+
+        //parsed attribute value pair for setCookie (we should not send Domain, Path, Expires cookies back to server, so remove them)
+        Map cookieValues = parseCookies(setCookie);
+        String domain = (String)cookieValues.remove("Domain");
+        if (domain == null) domain = (String)cookieValues.remove("domain");
+        if (domain == null) domain = "";
+        cookieValues.remove("Path");
+        cookieValues.remove("Expires");
+        cookieValues.remove("path");
+        cookieValues.remove("expires");
+
+        //get cookies for this domain
+        Map cookiesForDomain = (Map)cookieMap.get(domain);
+        //create if not exists
+        if (cookiesForDomain == null) cookiesForDomain = new ConcurrentHashMap();
+        //put & override the existing values
+        cookiesForDomain.putAll(cookieValues);
+        //set cookies for this host
+        cookieMap.put(domain, cookiesForDomain);
+
+        if (debugLevel > 0) {
+            System.out.println(">>>> Got new cookie for domain: '" + domain);
+            Iterator it = cookiesForDomain.keySet().iterator();
+            while (it.hasNext()) {
+                String key = (String)it.next();
+                System.out.print("\tKey: " + key);
+                System.out.println("  Value: " + cookiesForDomain.get(key));
+            }
+        }
+
+    }
+
+    private Map parseCookies(String cookies) {
+        Map result = new HashMap();
+        String[] cookieArray = cookies.split(";");
+        for (int i = 0; i < cookieArray.length; i++) {
+            String attributeValue = cookieArray[i];
+            int eqIndex = attributeValue.indexOf("=");
+            if (eqIndex == -1) continue;
+            String attribute = attributeValue.substring(0, eqIndex);
+            String value = attributeValue.substring(eqIndex + 1);
+            result.put(attribute.trim(), value.trim());
+        }
+
+        return result;
+    }
+
+    //returns the cookies to be sent for a host
+    private String getCookiesForHost(String host) {
+        //global cookie map for each domain
+        Map cookieMap = SimpleProxy.cookieMap;
+
+        //get cookies for this domain
+        Map cookiesForDomain = (Map)cookieMap.get(host);
+        if (cookiesForDomain == null) return null;
+
+        StringBuffer cookie = new StringBuffer();
+        cookie.append("Cookie: ");
+
+        Iterator it = cookiesForDomain.keySet().iterator();
+        while (it.hasNext()) {
+            String key = (String)it.next();
+            cookie.append(key);
+            cookie.append("=");
+            cookie.append(cookiesForDomain.get(key));
+            if (it.hasNext()) cookie.append(";");
+        }
+
+        if (debugLevel > 0) {
+            System.out.println("Sending cookie for host: " + host);
+            System.out.println("\t " + cookie.toString());
+        }
+
+
+        return cookie.toString();
     }
 }

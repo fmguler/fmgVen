@@ -16,8 +16,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //SimpleProxy.main(new String[]{"9999","127.0.0.1","8888"});
-        SimpleProxy.main(new String[]{"9999"});
+        SimpleProxy.main(new String[]{"9999","127.0.0.1","8888"});
+        //SimpleProxy.main(new String[]{"9999"});
     }
 
 }
