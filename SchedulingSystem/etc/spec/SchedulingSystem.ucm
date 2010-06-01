@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UCM-Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="2.0">
+  <Model UniqueID="75793492-fa10-4763-90b6-6e7455483a64" Name="Scheduling System" ID="1" Prefix="M" Author="" Company="" Release="" CreationDateValue="06/02/2010 00:01:48">
+    <Actors />
+    <Packages />
+    <UseCases />
+    <Requirements />
+    <Attributes>
+      <Description />
+      <Notes />
+      <RelatedDocuments />
+    </Attributes>
+    <Glossary />
+    <Stakeholders />
+  </Model>
+</UCM-Document>
