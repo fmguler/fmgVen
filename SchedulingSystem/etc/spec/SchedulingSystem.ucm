@@ -1,12 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UCM-Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="2.0">
-  <Model UniqueID="75793492-fa10-4763-90b6-6e7455483a64" Name="Scheduling System" ID="1" Prefix="M" Author="" Company="" Release="" CreationDateValue="06/02/2010 00:01:48">
-    <Actors />
+  <Model UniqueID="75793492-fa10-4763-90b6-6e7455483a64" Name="Scheduling System" ID="1" Prefix="M" Author="FMG" Company="" Release="" CreationDateValue="06/02/2010 00:01:48">
+    <Actors>
+      <Actor UniqueID="6485b55f-a3cc-41cb-b5a6-52e7908156dc" Name="Regular User" ID="1" Prefix="A">
+        <Attributes>
+          <Description />
+          <Notes />
+          <RelatedDocuments />
+        </Attributes>
+        <Goals>
+          <Goal UniqueID="275eef93-1520-4c22-bfd9-813fda1899da" Name="0" ID="0" Prefix="">
+            <Description>View the timeline</Description>
+          </Goal>
+          <Goal UniqueID="da735aba-8149-4511-a445-2a6fdbee1399" Name="1" ID="1" Prefix="">
+            <Description>View the task details</Description>
+          </Goal>
+          <Goal UniqueID="d2b9a6e2-9d0c-4fbb-8fe4-69454cacff78" Name="2" ID="2" Prefix="">
+            <Description>Add new task / edit existing tasks</Description>
+          </Goal>
+          <Goal UniqueID="cc1f6565-bafd-489c-822f-41e3a95fec4e" Name="3" ID="3" Prefix="">
+            <Description>Schedule tasks, see offered schedules</Description>
+          </Goal>
+        </Goals>
+      </Actor>
+      <Actor UniqueID="cf05a489-ec5a-4c3a-ba86-ddb0e06900af" Name="External System" ID="2" Prefix="A">
+        <Attributes>
+          <Description />
+          <Notes />
+          <RelatedDocuments />
+        </Attributes>
+        <Goals>
+          <Goal UniqueID="15dbf4b3-dbb1-4280-9c01-95d223de2eff" Name="1" ID="1" Prefix="">
+            <Description>Get the timeline image according to specified criteria</Description>
+          </Goal>
+        </Goals>
+      </Actor>
+    </Actors>
     <Packages />
-    <UseCases />
-    <Requirements />
+    <UseCases>
+      <UseCase UniqueID="74bd16b5-fca2-4cb6-9dda-ded0d99e0661" Name="View the timeline" ID="1" Prefix="UC">
+        <Attributes>
+          <Description>The scenario to view the current timeline. This can happen according to selected criteria/grouping.</Description>
+          <Notes />
+          <RelatedDocuments />
+        </Attributes>
+        <Steps>
+          <Step UniqueID="902ff474-39af-4e9c-9ec0-651665903e95" Name="1" ID="1" Prefix="">
+            <Description>User accesses the viewTimeline.htm page.</Description>
+            <ChildID>-1</ChildID>
+            <Type>Default</Type>
+          </Step>
+          <Step UniqueID="c67dabe2-7096-4041-8fa7-97a95611a133" Name="2" ID="2" Prefix="">
+            <Description>The timeline based on the current criteria/grouping is displayed on the page.</Description>
+            <ChildID>-1</ChildID>
+            <Type>Default</Type>
+          </Step>
+          <Step UniqueID="cfc219c7-a67e-4c49-8d6b-6842aa2c8b87" Name="2.1" ID="2" Prefix="">
+            <Description>Resource view: x axis has the resources (performers of tasks) y axis has tasks as bars. If more than one task is assigned to a performer, parallel tasks go to next line. Tasks are colored according to project. </Description>
+            <ChildID>1</ChildID>
+            <Type>Child</Type>
+          </Step>
+          <Step UniqueID="dbf01597-90d3-4075-be2f-3bf46128ea11" Name="2.2" ID="2" Prefix="">
+            <Description>Project view: x asis has the projects (tasks are owned by projects) y axis has the tasks as bars. Parallel tasks go to next line. Tasks are colored according to performers.</Description>
+            <ChildID>2</ChildID>
+            <Type>Child</Type>
+          </Step>
+          <Step UniqueID="01e6470f-bdce-4917-b995-1009ba0aee73" Name="3" ID="3" Prefix="">
+            <Description>User changes the display criteria</Description>
+            <ChildID>-1</ChildID>
+            <Type>Default</Type>
+          </Step>
+          <Step UniqueID="9dce6b8d-5075-440c-ba1a-f75643099e7a" Name="3.1" ID="3" Prefix="">
+            <Description>User changes the view (from available views)</Description>
+            <ChildID>1</ChildID>
+            <Type>Child</Type>
+          </Step>
+          <Step UniqueID="2e1ddd0d-02d9-426b-b14c-c317ee6dcb63" Name="3.2" ID="3" Prefix="">
+            <Description>User filters tasks according to resource, project, milestone, starting time, deadline, etc.</Description>
+            <ChildID>2</ChildID>
+            <Type>Child</Type>
+          </Step>
+        </Steps>
+        <OpenIssues />
+        <ActiveActors>
+          <ActiveActor>
+            <ActorUniqueID>6485b55f-a3cc-41cb-b5a6-52e7908156dc</ActorUniqueID>
+            <IsPrimary>false</IsPrimary>
+          </ActiveActor>
+        </ActiveActors>
+        <HistoryItems />
+        <Prose />
+        <Preconditions />
+        <Postconditions />
+        <Release />
+        <AssignedTo />
+        <Priority>1</Priority>
+        <Complexity>Low</Complexity>
+        <Implementation>Scheduled</Implementation>
+        <Level>Summary</Level>
+        <Status>Named</Status>
+        <Trigger>
+          <EventType>External</EventType>
+          <Description />
+        </Trigger>
+      </UseCase>
+    </UseCases>
+    <Requirements>
+      <Requirement UniqueID="b3dc28e1-4de7-418a-93a5-6ff71968296b" Name="1" ID="1" Prefix="">
+        <Description>User shall be able to track starting and estimated/actual completion times of tasks.</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="cc4b67e5-864a-4ff9-94c0-7b0764f18c15" Name="2" ID="2" Prefix="">
+        <Description>User shall be able to view tasks in a timeline view, tasks can be grouped by user, project, milestone, and similar filtering can be applied</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="f628e09a-ddad-4485-93e7-a8e6c15773a4" Name="3" ID="3" Prefix="">
+        <Description>Tasks should able to retrieved from external systems such as Trac, MS Excel, MS Project</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="6d64bf80-9ca9-46ba-b8ff-af436b40429a" Name="4" ID="4" Prefix="">
+        <Description>The timeline view should be exported as image file, or dynamic linking as an image should be possible</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="7c4ba273-8cbd-4431-b8d0-b89a6cc12b5a" Name="5" ID="5" Prefix="">
+        <Description>Tasks should be able to include other tasks (i.e. subtasks).</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="efcbdf58-c6ef-4252-8965-313ba9cb074f" Name="6" ID="6" Prefix="">
+        <Description>User should be able to set deadlines for tasks and/or subtasks.</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="9d3d5766-d128-4fef-b2fd-c2f8374ddc72" Name="7" ID="7" Prefix="">
+        <Description>The time spent on tasks should be be able to tracked, and user should be able to pause the tasks (preemted by another task) and continue working on it later.</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="d315e2f1-b3e4-4f7e-9ba5-36147eacc948" Name="8" ID="8" Prefix="">
+        <Description>User shall be able to assign priorities to tasks and the system should be able to offer different scheduling alternatives by using selected scheduling algorithms.</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="2016e52d-362a-4ee0-a0fc-f095621cbf85" Name="9" ID="9" Prefix="">
+        <Description>Scheduling System may also be used for recording instantaneous ideas, or notes regarding tasks, projects, i.e. mind map</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="cccfe8ea-1cf6-480a-8f9c-dda2d0099622" Name="10" ID="10" Prefix="">
+        <Description>Outputs/deliverables may also be specified about the tasks in addition to deadline/estimated completion time in order to increase precision/ponderability.</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+      <Requirement UniqueID="d3fc814f-c2dc-4fe6-a3ea-6367fd32998e" Name="11" ID="11" Prefix="">
+        <Description>Scheduling System may also be used as a development portal / company portal where it is integrated to environmental systems (trac, review board, svn, use case maker) or it can be plugged into an existing portal.</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
+    </Requirements>
     <Attributes>
-      <Description />
+      <Description>Scheduling system assists to plan and track the tasks of multiple projects. It aims to increase productivity by helping to be on track, foreseeing completion time of tasks, and inferring useful information by reviewing the past timeline.</Description>
       <Notes />
       <RelatedDocuments />
     </Attributes>
