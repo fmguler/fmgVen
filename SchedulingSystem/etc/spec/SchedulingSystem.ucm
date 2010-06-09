@@ -38,7 +38,7 @@
     </Actors>
     <Packages />
     <UseCases>
-      <UseCase UniqueID="74bd16b5-fca2-4cb6-9dda-ded0d99e0661" Name="View the timeline" ID="1" Prefix="UC">
+      <UseCase UniqueID="74bd16b5-fca2-4cb6-9dda-ded0d99e0661" Name="ViewTimeline" ID="1" Prefix="UC">
         <Attributes>
           <Description>The scenario to view the current timeline. This can happen according to selected criteria/grouping.</Description>
           <Notes />
@@ -206,7 +206,7 @@
         <AcceptanceStatus>Proposed</AcceptanceStatus>
       </Requirement>
       <Requirement UniqueID="cccfe8ea-1cf6-480a-8f9c-dda2d0099622" Name="10" ID="10" Prefix="">
-        <Description>Outputs/deliverables may also be specified about the tasks in addition to deadline/estimated completion time in order to increase precision/ponderability.</Description>
+        <Description>Outputs/deliverables may also be specified about the tasks in addition to deadline/estimated completion time in order to increase precision/ponderability. After completion, outputs can be linked to the task.</Description>
         <HistoryItems />
         <Proponents />
         <Beneficiaries />
@@ -227,10 +227,26 @@
         <Status>Named</Status>
         <AcceptanceStatus>Proposed</AcceptanceStatus>
       </Requirement>
+      <Requirement UniqueID="e7a9b10d-566e-478b-9f32-74195bbc5b86" Name="12" ID="12" Prefix="">
+        <Description>User should be able to redirected to external systems from associated (referenced) tasks. (There can be create/edit links for referenced systems)</Description>
+        <HistoryItems />
+        <Proponents />
+        <Beneficiaries />
+        <MappedUseCases />
+        <Category>Functional</Category>
+        <Importance>MustHave</Importance>
+        <Status>Named</Status>
+        <AcceptanceStatus>Proposed</AcceptanceStatus>
+      </Requirement>
     </Requirements>
     <Attributes>
       <Description>Scheduling system assists to plan and track the tasks of multiple projects. It aims to increase productivity by helping to be on track, foreseeing completion time of tasks, and inferring useful information by reviewing the past timeline.</Description>
-      <Notes />
+      <Notes>Similar Software;
+ - agileagenda
+ - the action machine
+ - rescue time
+ - effexis
+</Notes>
       <RelatedDocuments />
     </Attributes>
     <Glossary />
