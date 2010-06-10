@@ -11,6 +11,8 @@
         <backgroundAlpha>1</backgroundAlpha>
         <borderStyle>none</borderStyle>
         <color>15790322</color>
+        <hrefs>%2CScheduleTasks%26bm%3BScheduleTasks.bmml%26bm%3BScheduleTasks.bmml%26bm%3BScheduleTasks.bmml%2C%2C%2C</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22131%2C85%2C237%2C114%22%20href%3D%22ScheduleTasks.bmml%22%20alt%3D%22ScheduleTasks%22%20id%3D%2240_0%22/%3E%0A</map>
         <selectedIndex>0</selectedIndex>
         <tabVPosition>top</tabVPosition>
         <text>View%20Timeline%2C%20Schedule%20Tasks%2C%20Resources%2C%20Preferences%2C%20Admin</text>
@@ -353,6 +355,18 @@
       <controlProperties>
         <icon>SearchIcon%7Csmall</icon>
         <text>Zoom%20In/Out</text>
+      </controlProperties>
+    </control>
+    <control controlID="119" controlTypeID="com.balsamiq.mockups::Tree" x="802" y="451" w="174" h="205" measuredW="300" measuredH="225" zOrder="40" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <text>v%20Project%201%0A%20%3E%20Component%201%0A%20%3E%20Component%202%0A%20%3E%20Component%203%0Av%20Project%202%0A%20%3E%20Component%201%0A%20%3E%20Component%202</text>
+        <verticalScrollbar>true</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="120" controlTypeID="com.balsamiq.mockups::Label" x="719" y="457" w="-1" h="-1" measuredW="82" measuredH="25" zOrder="41" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Components%3A</text>
       </controlProperties>
     </control>
   </controls>
