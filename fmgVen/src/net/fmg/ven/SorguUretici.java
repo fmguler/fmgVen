@@ -2,9 +2,9 @@
  * SorguUretici.java
  *
  * Created on December 18, 2006, 9:32 AM
- * (4.12.06 tarihli SpringDaoDeneme çalışmasından derlenmiştir)
+ * (4.12.06 tarihli SpringDaoDeneme Ã§alÄ±ÅŸmasÄ±ndan derlenmiÅŸtir)
  *
- * Ven - Ayar Yerine Gelenek veritabanı erişim nesnesi
+ * Ven - Ayar Yerine Gelenek veritabanÄ± eriÅŸim nesnesi
  */
 
 package net.fmg.ven;
@@ -22,8 +22,8 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 /**
- * Belirtilen sınıfın 'Ayar yerine gelenek' yaklaşımında sorgusunu üretir
- * @author Fatih Mehmet Güler
+ * Belirtilen sÄ±nÄ±fÄ±n 'Ayar yerine gelenek' yaklaÅŸÄ±mÄ±nda sorgusunu Ã¼retir
+ * @author Fatih Mehmet GÃ¼ler
  */
 public class SorguUretici {
     private Set vtSiniflari;
@@ -49,25 +49,25 @@ public class SorguUretici {
         BeanWrapper wr = new BeanWrapperImpl(nesneSinifi);
         PropertyDescriptor[] pdArr = wr.getPropertyDescriptors();
         for (int i = 0; i < pdArr.length; i++) {
-            Class alanSinifi = pdArr[i].getPropertyType(); //alan sınıfı
-            String sutunAdi = Cevir.vt(pdArr[i].getName()); //sütun adı
-            String alanAdi = pdArr[i].getName(); //alan adı
-            if (vtSiniflari.contains(alanSinifi)){ //veritabanı direk alan (Integer,String,Date, vs)
-                selectCumlesi.append(tabloAdi+"."+sutunAdi+" as "+tabloAdi+"_"+sutunAdi); //sütun
+            Class alanSinifi = pdArr[i].getPropertyType(); //alan sÄ±nÄ±fÄ±
+            String sutunAdi = Cevir.vt(pdArr[i].getName()); //sÃ¼tun adÄ±
+            String alanAdi = pdArr[i].getName(); //alan adÄ±
+            if (vtSiniflari.contains(alanSinifi)){ //veritabanÄ± direk alan (Integer,String,Date, vs)
+                selectCumlesi.append(tabloAdi+"."+sutunAdi+" as "+tabloAdi+"_"+sutunAdi); //sÃ¼tun
                 selectCumlesi.append(", ");
             }
             if (alanSinifi.getPackage()!=null && nesnePaketleri.contains(alanSinifi.getPackage().getName()) && baglarKapsar(baglar,nesneYolu+"."+alanAdi)){ //domain nesnesi 1-1 join
-                String bagTablosuDigerAd = tabloAdi+"_"+sutunAdi; // bağ tablosu için diğer ad, çünkü aynı isimde birden fazla bağ olabilir, karışmasın
-                String bagTablosu = Cevir.vt(alanSinifi.getSimpleName());//gerçek bağ tablosu
+                String bagTablosuDigerAd = tabloAdi+"_"+sutunAdi; // baÄŸ tablosu iÃ§in diÄŸer ad, Ã§Ã¼nkÃ¼ aynÄ± isimde birden fazla baÄŸ olabilir, karÄ±ÅŸmasÄ±n
+                String bagTablosu = Cevir.vt(alanSinifi.getSimpleName());//gerÃ§ek baÄŸ tablosu
                 fromCumlesi.append(" left join "+bagTablosu+" "+bagTablosuDigerAd);
                 fromCumlesi.append(" on "+bagTablosuDigerAd+".no = "+tabloAdi+"."+sutunAdi+"_no");
                 tekrarlayanSorguUret(++seviye,bagTablosuDigerAd,nesneYolu+"."+alanAdi,alanSinifi,baglar,selectCumlesi,fromCumlesi);
             }
             if (wr.getPropertyValue(alanAdi) instanceof SinifBildirenLinkedList && baglarKapsar(baglar,nesneYolu+"."+alanAdi)){
                 Class cokluAlandakiNesneSinifi = (Class)wr.getPropertyValue(alanAdi+".nesneSinifi");
-                String bagTablosuDigerAd = tabloAdi+"_"+sutunAdi; // bağ tablosu için diğer ad, çünkü aynı isimde birden fazla bağ olabilir, karışmasın
-                String bagTablosu = Cevir.vt(cokluAlandakiNesneSinifi.getSimpleName());//gerçek bağ tablosu
-                String bagAlani = Cevir.vt((String)wr.getPropertyValue(alanAdi+".bagAlani")); //YAP: bunu vermeden de varsayılan birşey yapsın
+                String bagTablosuDigerAd = tabloAdi+"_"+sutunAdi; // baÄŸ tablosu iÃ§in diÄŸer ad, Ã§Ã¼nkÃ¼ aynÄ± isimde birden fazla baÄŸ olabilir, karÄ±ÅŸmasÄ±n
+                String bagTablosu = Cevir.vt(cokluAlandakiNesneSinifi.getSimpleName());//gerÃ§ek baÄŸ tablosu
+                String bagAlani = Cevir.vt((String)wr.getPropertyValue(alanAdi+".bagAlani")); //YAP: bunu vermeden de varsayÄ±lan birÅŸey yapsÄ±n
                 fromCumlesi.append(" left join "+bagTablosu+" "+bagTablosuDigerAd);
                 fromCumlesi.append(" on "+bagTablosuDigerAd+"."+bagAlani+"_no = "+tabloAdi+".no");
                 tekrarlayanSorguUret(++seviye,bagTablosuDigerAd,nesneYolu+"."+alanAdi,cokluAlandakiNesneSinifi,baglar,selectCumlesi,fromCumlesi);
@@ -88,7 +88,7 @@ public class SorguUretici {
     }
     
     /**
-     * Sql select sorgusu üretir
+     * Sql select sorgusu Ã¼retir
      */
     public String secmeSorgusuUret(Set baglar, Class nesneSinifi){
         //long t1 = System.currentTimeMillis();
@@ -98,12 +98,12 @@ public class SorguUretici {
         StringBuffer fromCumlesi = new StringBuffer("from "+tabloAdi);
         tekrarlayanSorguUret(0,tabloAdi,nesneAdi,nesneSinifi,baglar,selectCumlesi,fromCumlesi);
         selectCumlesi.append(" 1=1");
-        //System.out.println("Sorgu üretme zamanı="+(System.currentTimeMillis()-t1));        
+        //System.out.println("Sorgu Ã¼retme zamanÄ±="+(System.currentTimeMillis()-t1));        
         return selectCumlesi.toString()+" \n"+fromCumlesi.toString();
     }
     
     /**
-     * Sql select sorgusu üretir, ancak alanları almaz count(distinct tabloadi.no) alır
+     * Sql select sorgusu Ã¼retir, ancak alanlarÄ± almaz count(distinct tabloadi.no) alÄ±r
      */
     public String saymaSorgusuUret(Set baglar, Class nesneSinifi){
         //long t1 = System.currentTimeMillis();
@@ -112,13 +112,13 @@ public class SorguUretici {
         StringBuffer selectCumlesi = new StringBuffer();
         StringBuffer fromCumlesi = new StringBuffer("from "+tabloAdi);
         tekrarlayanSorguUret(0,tabloAdi,nesneAdi,nesneSinifi,baglar,selectCumlesi,fromCumlesi);
-        //System.out.println("Sorgu üretme zamanı="+(System.currentTimeMillis()-t1));        
+        //System.out.println("Sorgu Ã¼retme zamanÄ±="+(System.currentTimeMillis()-t1));        
         return "select count(distinct "+tabloAdi+".no) \n"+fromCumlesi.toString();
     }
     
     
     /**
-     * insert-update sorgusu üretir
+     * insert-update sorgusu Ã¼retir
      */
     public String guncellemeSorgusuUret(Object nesne){
         BeanWrapper wr = new BeanWrapperImpl(nesne);
@@ -132,11 +132,11 @@ public class SorguUretici {
             sorgu = new StringBuffer("insert into "+tabloAdi+"(");
             StringBuffer degerler = new StringBuffer(" values(");
             for (int i = 0; i < pdArr.length; i++) {
-                Class alanSinifi = pdArr[i].getPropertyType(); //alan sınıfı
-                String sutunAdi = Cevir.vt(pdArr[i].getName()); //sütun adı
-                String alanAdi = pdArr[i].getName(); //alan adı
-                if (alanAdi.equals("no")) continue; //YAP: Belki squenci bozar, ama bozmuyosa kaldır
-                if (vtSiniflari.contains(alanSinifi)){ //veritabanı direk alan (Integer,String,Date, vs)
+                Class alanSinifi = pdArr[i].getPropertyType(); //alan sÄ±nÄ±fÄ±
+                String sutunAdi = Cevir.vt(pdArr[i].getName()); //sÃ¼tun adÄ±
+                String alanAdi = pdArr[i].getName(); //alan adÄ±
+                if (alanAdi.equals("no")) continue; //YAP: Belki squenci bozar, ama bozmuyosa kaldÄ±r
+                if (vtSiniflari.contains(alanSinifi)){ //veritabanÄ± direk alan (Integer,String,Date, vs)
                     sorgu.append(sutunAdi);
                     sorgu.append(",");
                     degerler.append(":"+alanAdi);
@@ -155,13 +155,13 @@ public class SorguUretici {
             degerler.append(");");                    
             sorgu.append(degerler);            
             
-        }else{ //güncelle
+        }else{ //gÃ¼ncelle
             sorgu = new StringBuffer("update "+tabloAdi+" set ");
             for (int i = 0; i < pdArr.length; i++) {
-                Class alanSinifi = pdArr[i].getPropertyType(); //alan sınıfı
-                String sutunAdi = Cevir.vt(pdArr[i].getName()); //sütun adı
-                String alanAdi = pdArr[i].getName(); //alan adı
-                if (vtSiniflari.contains(alanSinifi)){ //veritabanı direk alan (Integer,String,Date, vs)
+                Class alanSinifi = pdArr[i].getPropertyType(); //alan sÄ±nÄ±fÄ±
+                String sutunAdi = Cevir.vt(pdArr[i].getName()); //sÃ¼tun adÄ±
+                String alanAdi = pdArr[i].getName(); //alan adÄ±
+                if (vtSiniflari.contains(alanSinifi)){ //veritabanÄ± direk alan (Integer,String,Date, vs)
                     sorgu.append(sutunAdi+"=:"+alanAdi);
                     sorgu.append(",");
                 }
@@ -171,7 +171,7 @@ public class SorguUretici {
                 }
             }
             sorgu.deleteCharAt(sorgu.length()-1);
-            sorgu.append(" where no = :no ;"); //YAP: sonuncu virgülü sil
+            sorgu.append(" where no = :no ;"); //YAP: sonuncu virgÃ¼lÃ¼ sil
         }
         return sorgu.toString();
     }

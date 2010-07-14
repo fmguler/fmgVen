@@ -2,9 +2,9 @@
  * Olcut.java
  *
  * Created on December 20, 2006, 1:45 PM
- * (4.12.06 tarihli SpringDaoDeneme çalışmasından derlenmiştir)
+ * (4.12.06 tarihli SpringDaoDeneme Ã§alÄ±ÅŸmasÄ±ndan derlenmiÅŸtir)
  *
- * Ven - Ayar Yerine Gelenek veritabanı erişim nesnesi
+ * Ven - Ayar Yerine Gelenek veritabanÄ± eriÅŸim nesnesi
  */
 
 package net.fmg.ven;
@@ -17,8 +17,8 @@ import java.util.Set;
 import net.fmg.ven.arac.Cevir;
 
 /**
- * Ven için ölçütlerin belirlenebileceği sınıf
- * @author Fatih Mehmet Güler
+ * Ven iÃ§in Ã¶lÃ§Ã¼tlerin belirlenebileceÄŸi sÄ±nÄ±f
+ * @author Fatih Mehmet GÃ¼ler
  */
 public class Olcut {
     private String metin;
@@ -26,7 +26,7 @@ public class Olcut {
     private Set baglaclar;
     
     /** 
-     * Yeni ölçüt
+     * Yeni Ã¶lÃ§Ã¼t
      */
     public Olcut() {
         this.metin = "";
@@ -57,7 +57,7 @@ public class Olcut {
     }
     
     /**
-     * koşul ekle
+     * koÅŸul ekle
      */
     public Olcut ekle(String kosul){
         this.metin +=" "+kosul;
@@ -65,7 +65,7 @@ public class Olcut {
     }
     
     /**
-     * koşullarda kullanılan parametreleri ekle
+     * koÅŸullarda kullanÄ±lan parametreleri ekle
      */
     public Olcut ekle(String parametre, Object nesne){
         this.parametreler.put(parametre,nesne);
@@ -73,7 +73,7 @@ public class Olcut {
     }
     
     /**
-     * koşullarda kullanılan parametreleri tümden ekle
+     * koÅŸullarda kullanÄ±lan parametreleri tÃ¼mden ekle
      */
     public Olcut ekle(Map parametreler){
         this.parametreler.putAll(parametreler);

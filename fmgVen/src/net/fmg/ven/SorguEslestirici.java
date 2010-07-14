@@ -2,9 +2,9 @@
  * SorguEslestirici.java
  *
  * Created on December 18, 2006, 10:40 AM
- * (4.12.06 tarihli SpringDaoDeneme çalışmasından derlenmiştir)
+ * (4.12.06 tarihli SpringDaoDeneme Ã§alÄ±ÅŸmasÄ±ndan derlenmiÅŸtir)
  *
- * Ven - Ayar Yerine Gelenek veritabanı erişim nesnesi
+ * Ven - Ayar Yerine Gelenek veritabanÄ± eriÅŸim nesnesi
  */
 
 package net.fmg.ven;
@@ -29,8 +29,8 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
- * 'Ayar yerine gelenek' yaklaşımında üretilmiş sorgunun sonucunu belirtilen nesneye eşler
- * @author Fatih Mehmet Güler
+ * 'Ayar yerine gelenek' yaklaÅŸÄ±mÄ±nda Ã¼retilmiÅŸ sorgunun sonucunu belirtilen nesneye eÅŸler
+ * @author Fatih Mehmet GÃ¼ler
  */
 public class SorguEslestirici{
     private NamedParameterJdbcTemplate sablon;
@@ -66,59 +66,59 @@ public class SorguEslestirici{
             }
         }
         );
-        System.out.println("Listeleme zamanı="+(System.currentTimeMillis()-t1));        
+        System.out.println("Listeleme zamanÄ±="+(System.currentTimeMillis()-t1));        
         return sonuclar;
     }
     
     private void esle(ResultSet rs, Set sutunlar, String tabloAdi, Class nesneSinifi, List ustListe){
         try{
-            if (!sutunlar.contains(tabloAdi+"_no")) return; //bu nesne sütunlar arasında hiç yok
+            if (!sutunlar.contains(tabloAdi+"_no")) return; //bu nesne sÃ¼tunlar arasÄ±nda hiÃ§ yok
             Object no = rs.getObject(tabloAdi+"_no");
-            if (no==null) return; //bu nesne sütunlar arasında var ama null, muhtemelen left join den dolayı
-            BeanWrapper wr=new BeanWrapperImpl(nesneSinifi); //Zaten class introspectionunu saklıyor (CachedIntrospectionResults.forClass())
+            if (no==null) return; //bu nesne sÃ¼tunlar arasÄ±nda var ama null, muhtemelen left join den dolayÄ±
+            BeanWrapper wr=new BeanWrapperImpl(nesneSinifi); //Zaten class introspectionunu saklÄ±yor (CachedIntrospectionResults.forClass())
             wr.setPropertyValue("no",no);
             Object nesne = wr.getWrappedInstance();
             boolean esle = true;
-            for (Iterator it = ustListe.iterator(); it.hasNext();) { //listenin içinde indexOf ve get(i) ile birkaç kez dolaşmak yerinde bir kez dolaşmış olalım, onlar da aynı şeyi yapıyor çünkü.
+            for (Iterator it = ustListe.iterator(); it.hasNext();) { //listenin iÃ§inde indexOf ve get(i) ile birkaÃ§ kez dolaÅŸmak yerinde bir kez dolaÅŸmÄ±ÅŸ olalÄ±m, onlar da aynÄ± ÅŸeyi yapÄ±yor Ã§Ã¼nkÃ¼.
                 Object listedekiNesne = (Object) it.next();
-                if (nesne.equals(listedekiNesne)){ //NOT: bunu no'ları karşılaştırarak da yapabiliriz
-                    wr.setWrappedInstance(listedekiNesne); //listede zaten var onu kullanmalıyız
-                    esle = false; // ve tekrar eşleme yapmamalıyız
+                if (nesne.equals(listedekiNesne)){ //NOT: bunu no'larÄ± karÅŸÄ±laÅŸtÄ±rarak da yapabiliriz
+                    wr.setWrappedInstance(listedekiNesne); //listede zaten var onu kullanmalÄ±yÄ±z
+                    esle = false; // ve tekrar eÅŸleme yapmamalÄ±yÄ±z
                     break;
                 }
             }
-            if (esle) ustListe.add(nesne); //bulamadık, yani listede yok bunu ekliyoruz
+            if (esle) ustListe.add(nesne); //bulamadÄ±k, yani listede yok bunu ekliyoruz
             PropertyDescriptor[] pdArr = wr.getPropertyDescriptors();
             for (int i = 0; i < pdArr.length; i++) {
                 PropertyDescriptor pd = pdArr[i];
                 String alanAdi = Cevir.vt(pd.getName());
                 Class alanSinifi = pd.getPropertyType();
                 String sutun = tabloAdi+"_"+alanAdi;
-                if (esle && vtSiniflari.contains(alanSinifi)){ //veritabanı nesneleri
+                if (esle && vtSiniflari.contains(alanSinifi)){ //veritabanÄ± nesneleri
                     if(sutunlar.contains(sutun)){
                         if(hataAyiklama) System.out.println(">>alan bulundu "+sutun);
                         wr.setPropertyValue(pd.getName(),rs.getObject(sutun));
                     }else{
-                        if(hataAyiklama) System.out.println("--alan bulunamadı: "+sutun);
+                        if(hataAyiklama) System.out.println("--alan bulunamadÄ±: "+sutun);
                     }
                 }
                 if (esle && alanSinifi.getPackage()!=null && getNesnePaketleri().contains(alanSinifi.getPackage().getName())){ //bire bir nesneler
                     if(sutunlar.contains(sutun+"_no")){
                         if(hataAyiklama) System.out.println(">>nesne bulundu "+sutun);
-                        List list = new ArrayList(1); //tek sonuç olacağını biliyoruz
+                        List list = new ArrayList(1); //tek sonuÃ§ olacaÄŸÄ±nÄ± biliyoruz
                         esle(rs,sutunlar,sutun,alanSinifi,list);
                         if(list.size()>0)wr.setPropertyValue(pd.getName(),list.get(0));
                     }else{
-                        if(hataAyiklama) System.out.println("--nesne bulunamadı: "+sutun);
+                        if(hataAyiklama) System.out.println("--nesne bulunamadÄ±: "+sutun);
                     }
                 }
-                if ((SinifBildirenLinkedList) wr.getPropertyValue(pd.getName())  instanceof SinifBildirenLinkedList){ //çoklu nesneler
+                if ((SinifBildirenLinkedList) wr.getPropertyValue(pd.getName())  instanceof SinifBildirenLinkedList){ //Ã§oklu nesneler
                     if(sutunlar.contains(sutun+"_no")){
                         if(hataAyiklama) System.out.println(">>liste bulundu "+sutun);
                         Class bagNesneSinifi = (Class)wr.getPropertyValue(pdArr[i].getName()+".nesneSinifi");
                         esle(rs,sutunlar,sutun,bagNesneSinifi,(List)wr.getPropertyValue(pd.getName()));
                     }else{
-                        if(hataAyiklama) System.out.println("--liste bulunamadı: "+sutun);
+                        if(hataAyiklama) System.out.println("--liste bulunamadÄ±: "+sutun);
                     }
                 }
                 

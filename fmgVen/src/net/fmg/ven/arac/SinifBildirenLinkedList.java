@@ -3,7 +3,7 @@
  *
  * Created on December 16, 2006, 9:06 PM
  *
- * Fatih Mehmet Güler
+ * Fatih Mehmet GÃ¼ler
  */
 
 package net.fmg.ven.arac;
@@ -11,7 +11,7 @@ package net.fmg.ven.arac;
 import java.util.LinkedList;
 
 /**
- * İçinde tuttuğu nesne türünü bildiren linked list
+ * Ä°Ã§inde tuttuÄŸu nesne tÃ¼rÃ¼nÃ¼ bildiren linked list
  * @author Fatih
  */
 public class SinifBildirenLinkedList extends LinkedList{
@@ -22,19 +22,19 @@ public class SinifBildirenLinkedList extends LinkedList{
      * Creates a new instance of SinifBildirenLinkedList
      */
     public SinifBildirenLinkedList() {                
-        System.out.println("FmgList, normal LinkedList kipinde çalışıyor...");
+        System.out.println("FmgList, normal LinkedList kipinde Ã§alÄ±ÅŸÄ±yor...");
     }
     
     /**
-     * içindeki bileşen türü sınıfı belirt
+     * iÃ§indeki bileÅŸen tÃ¼rÃ¼ sÄ±nÄ±fÄ± belirt
      */
     public SinifBildirenLinkedList(Class nesneSinifi) {
         this.nesneSinifi = nesneSinifi;
-        System.out.println("**Uyarı-> bileşen alanı verilmeden çözme henüz yapılmadı, sorgunuz çalışmayacak");
+        System.out.println("**UyarÄ±-> bileÅŸen alanÄ± verilmeden Ã§Ã¶zme henÃ¼z yapÄ±lmadÄ±, sorgunuz Ã§alÄ±ÅŸmayacak");
     }
     
     /**
-     * içindeki bileşen türü sınıfı ve o sınıftaki hangi alana birleştiğini belirt
+     * iÃ§indeki bileÅŸen tÃ¼rÃ¼ sÄ±nÄ±fÄ± ve o sÄ±nÄ±ftaki hangi alana birleÅŸtiÄŸini belirt
      */
     public SinifBildirenLinkedList(Class nesneSinifi, String bagAlani) {
         this.nesneSinifi = nesneSinifi;
@@ -49,9 +49,9 @@ public class SinifBildirenLinkedList extends LinkedList{
         this.nesneSinifi = nesneSinifi;
     }
 
-    //zorlamaya gerek yok, sadece türünü belirlemek çabamız
+    //zorlamaya gerek yok, sadece tÃ¼rÃ¼nÃ¼ belirlemek Ã§abamÄ±z
     //public boolean add(E o) {
-    //    if (o.getClass()!=nesneSinifi) throw new RuntimeException("Desteklenmeyen bileşen türü!");        
+    //    if (o.getClass()!=nesneSinifi) throw new RuntimeException("Desteklenmeyen bileÅŸen tÃ¼rÃ¼!");        
     //    return super.add(o);
     //}
 

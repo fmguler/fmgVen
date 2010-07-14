@@ -2,9 +2,9 @@
  * Cevir.java
  *
  * Created on December 18, 2006, 10:51 AM
- * (4.12.06 tarihli SpringDaoDeneme çalışmasından derlenmiştir)
+ * (4.12.06 tarihli SpringDaoDeneme Ã§alÄ±ÅŸmasÄ±ndan derlenmiÅŸtir)
  *
- * Ven - Ayar Yerine Gelenek veritabanı erişim nesnesi
+ * Ven - Ayar Yerine Gelenek veritabanÄ± eriÅŸim nesnesi
  */
 
 package net.fmg.ven.arac;
@@ -12,8 +12,8 @@ package net.fmg.ven.arac;
 import java.util.Locale;
 
 /**
- * Deve harflerle yazılmış metni veritabanı şekline çevirir
- * @author Fatih Mehmet Güler
+ * Deve harflerle yazÄ±lmÄ±ÅŸ metni veritabanÄ± ÅŸekline Ã§evirir
+ * @author Fatih Mehmet GÃ¼ler
  */
 public class Cevir {
     
