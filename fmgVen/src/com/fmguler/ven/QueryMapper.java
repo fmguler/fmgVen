@@ -22,35 +22,14 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
- * The main class for data access
+ * Maps the result of the query generated in the form of 'Convention over Configuration' to the specified object.
  * @author Fatih Mehmet Güler
  */
-public class Ven {
+public class QueryMapper {
     private NamedParameterJdbcTemplate template;
-    private QueryGenerator generator;
-    private QueryMapper mapper;
-
-    public Ven() {
-        generator = new QueryGenerator();
-        mapper = new QueryMapper();
-    }
 
     public List list() {
         return null;
-    }
-
-    public int count() {
-        return 0;
-    }
-
-    public Object get(int no, Class objectClass) {
-        return null;
-    }
-
-    public void save(Object object) {
-    }
-
-    public void delete(int no, Class objectClass) {
     }
 
     //SETTERS-------------------------------------------------------------------
@@ -59,9 +38,7 @@ public class Ven {
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public Ven addDomainPackage(String domainPackage) {
-        generator.addDomainPackage(domainPackage);
-        mapper.addDomainPackage(domainPackage);
-        return this;
+    public void addDomainPackage(String domainPackage){
+
     }
 }

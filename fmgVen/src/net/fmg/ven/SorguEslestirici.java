@@ -123,7 +123,7 @@ public class SorguEslestirici{
                 }
                 
             }
-        } catch(SQLException ex){
+        } catch(Exception ex){
             ex.printStackTrace();
         }
     }
