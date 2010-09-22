@@ -19,8 +19,16 @@ package com.fmguler.ven.sample;
 
 import com.fmguler.ven.Ven;
 import com.fmguler.ven.sample.domain.SomeDomainObject;
+import java.sql.SQLException;
+import java.util.Locale;
 import javax.sql.DataSource;
+import liquibase.FileSystemFileOpener;
+import liquibase.exception.JDBCException;
+import liquibase.exception.LiquibaseException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
 
 /**
  * Demonstrates sample usage of fmgVen.
@@ -28,7 +36,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 public class Sample {
     public static void main(String[] args) {
+        buildDatabase();
         test1();
+        //rollbackDatabase();
     }
 
     public static void test1() {
@@ -50,7 +60,42 @@ public class Sample {
         ds.setDriverClassName("org.postgresql.Driver");
         ds.setUsername("postgres");
         ds.setPassword("qwerty");
-        ds.setUrl("jdbc:postgresql://127.0.0.1:5432/vendb");
+        ds.setUrl("jdbc:postgresql://127.0.0.1:5432/ven-test");
         return ds;
+    }
+
+    private static void buildDatabase() {
+        try {
+            Locale currLocale = Locale.getDefault();
+            Locale.setDefault(Locale.ENGLISH);
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDataSource().getConnection());
+            Liquibase liquibase = new Liquibase("etc/test-db/test-db-changelog.xml", new FileSystemFileOpener(), database);
+            liquibase.update("");
+            Locale.setDefault(currLocale);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (JDBCException ex) {
+            ex.printStackTrace();
+        } catch (LiquibaseException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void rollbackDatabase() {
+        try {
+            Locale currLocale = Locale.getDefault();
+            Locale.setDefault(Locale.ENGLISH);
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDataSource().getConnection());
+            Liquibase liquibase = new Liquibase("etc/test-db/test-db-changelog.xml", new FileSystemFileOpener(), database);
+            //liquibase.rollback(51, "");
+            liquibase.rollback("0", "");
+            Locale.setDefault(currLocale);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (JDBCException ex) {
+            ex.printStackTrace();
+        } catch (LiquibaseException ex) {
+            ex.printStackTrace();
+        }
     }
 }

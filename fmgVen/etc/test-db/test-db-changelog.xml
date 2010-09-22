@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="database-schema.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+    <changeSet author="fmguler" id="init">
+    </changeSet>
+    <changeSet author="fmguler" id="0">
+        <tagDatabase tag="0"/>
+    </changeSet>
+    <!-- TEST SCHEMA >> -->
+    <changeSet author="fmguler" id="1">
+        <createTable schemaName="public" tableName="aa_authorization_parameter">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="aa_authorization_parameter_pkey"/>
+            </column>
+            <column name="param_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute" type="VARCHAR(100)"/>
+            <column name="operator" type="VARCHAR(100)"/>
+            <column name="value" type="TEXT(2147483647)"/>
+            <column name="connective" type="VARCHAR(10)"/>
+            <column name="order" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="2">
+        <createTable schemaName="public" tableName="aa_group">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="aa_group_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(1000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="3">
+        <createTable schemaName="public" tableName="aa_group_authorization">
+            <column name="auth_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param_no" type="int4"/>
+            <column name="rule" type="int4"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="4">
+        <createTable schemaName="public" tableName="aa_user_group">
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="5">
+        <createTable schemaName="public" tableName="user_attribute">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_attribute_pkey"/>
+            </column>
+            <column autoIncrement="true" name="user_no" type="serial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute" type="VARCHAR(100)"/>
+            <column name="value" type="TEXT(2147483647)"/>
+            <column name="type" type="VARCHAR(100)"/>
+            <column defaultValueNumeric="0" name="priority" type="int4"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="6">
+        <createTable schemaName="public" tableName="user_authentication">
+            <column name="username" type="VARCHAR(150)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_authentication_pkey"/>
+            </column>
+            <column name="password" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="7">
+        <createTable schemaName="public" tableName="user_operation">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_operation_pkey"/>
+            </column>
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="module" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operation" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueDate="now()" name="date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parameter" type="TEXT(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="8">
+        <addPrimaryKey columnNames="auth_name, group_no" constraintName="aa_group_authorization_pkey" schemaName="public" tableName="aa_group_authorization"/>
+    </changeSet>
+    <changeSet author="fmguler" id="9">
+        <addPrimaryKey columnNames="username, group_no" constraintName="aa_user_group_pkey" schemaName="public" tableName="aa_user_group"/>
+    </changeSet>
+    <changeSet author="fmguler" id="10">
+        <addUniqueConstraint columnNames="user_no, attribute" constraintName="user_attribute_user_no_key" schemaName="public" tableName="user_attribute"/>
+    </changeSet>
+    <changeSet author="fmguler" id="11">
+        <createIndex indexName="aa_param_index" schemaName="public" tableName="aa_authorization_parameter" unique="false">
+            <column name="param_no"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fmguler" id="12">
+        <createIndex indexName="aa_param_index2" schemaName="public" tableName="aa_group_authorization" unique="false">
+            <column name="param_no"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fmguler" id="13">
+        <createIndex indexName="aa_auth_name_index" schemaName="public" tableName="aa_group_authorization" unique="false">
+            <column name="auth_name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fmguler" id="14">
+        <createIndex indexName="aa_user_group_index" schemaName="public" tableName="aa_user_group" unique="false">
+            <column name="username"/>
+            <column name="group_no"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fmguler" id="15">
+        <createIndex indexName="user_operation_index" schemaName="public" tableName="user_operation" unique="false">
+            <column name="username"/>
+            <column name="module"/>
+            <column name="operation"/>
+            <column name="date"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fmguler" id="16">
+        <addForeignKeyConstraint baseColumnNames="group_no" baseTableName="aa_group_authorization" baseTableSchemaName="public" constraintName="aa_group_authorization_group_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="no" referencedTableName="aa_group" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="17">
+        <createView schemaName="public" viewName="user_view">
+            <![CDATA[SELECT ua.user_no, u1.value AS username, u2.value AS full_name, u3.value AS receipt_signing_type, u4.value AS mobile_signature_phone_number, u5.value AS mobile_signature_credit FROM ((((((SELECT DISTINCT user_attribute.user_no FROM user_attribute ORDER BY user_attribute.user_no) ua LEFT JOIN (SELECT user_attribute.user_no, user_attribute.value FROM user_attribute WHERE ((user_attribute.attribute)::text = 'username'::text)) u1 ON ((ua.user_no = u1.user_no))) LEFT JOIN (SELECT user_attribute.user_no, user_attribute.value FROM user_attribute WHERE ((user_attribute.attribute)::text = 'fullName'::text)) u2 ON ((ua.user_no = u2.user_no))) LEFT JOIN (SELECT user_attribute.user_no, user_attribute.value FROM user_attribute WHERE ((user_attribute.attribute)::text = 'receiptSigningType'::text)) u3 ON ((ua.user_no = u3.user_no))) LEFT JOIN (SELECT user_attribute.user_no, user_attribute.value FROM user_attribute WHERE ((user_attribute.attribute)::text = 'mobileSignaturePhoneNumber'::text)) u4 ON ((ua.user_no = u4.user_no))) LEFT JOIN (SELECT user_attribute.user_no, user_attribute.value FROM user_attribute WHERE ((user_attribute.attribute)::text = 'mobileSignatureCredit'::text)) u5 ON ((ua.user_no = u5.user_no))) ORDER BY ua.user_no;]]>
+        </createView>
+    </changeSet>
+    <changeSet author="fmguler" id="18">
+        <comment>SERIAL'ler serilerin sonuna _seq ekliyor, ama kodda oldugu gibi cagirabiliyoruz</comment>
+        <sql>
+          ALTER TABLE aa_authorization_parameter_no_seq RENAME TO aa_authorization_parameter_no;
+          ALTER TABLE aa_group_no_seq RENAME TO aa_group_no;
+          ALTER TABLE user_attribute_no_seq RENAME TO user_attribute_no;
+          ALTER TABLE user_attribute_user_no_seq RENAME TO user_no;
+          ALTER TABLE user_operation_no_seq RENAME TO user_operation_no;
+        </sql>
+        <rollback/>
+    </changeSet>
+    <changeSet author="fmguler" id="19">
+        <comment>Default Data</comment>
+        <sql>
+          INSERT INTO aa_group ("no", name, description) VALUES (1, 'Signomat Base Users', 'Signomat Base Users, have basic usage rights');
+          INSERT INTO aa_group ("no", name, description) VALUES (2, 'SignArt Client Users', 'SignArt Client Users, have access to CSP mobile signing facilities');
+          INSERT INTO aa_group ("no", name, description) VALUES (3, 'Workspace Users', 'Workspace Users, have access to /workspace web pages');
+          INSERT INTO aa_group ("no", name, description) VALUES (4, 'Dox Users', 'Dox Users, have access to /dox web pages');
+          INSERT INTO aa_group ("no", name, description) VALUES (5, 'Admin Users', 'Admin Users have access to /admin web pages');
+          INSERT INTO aa_group ("no", name, description) VALUES (6, 'Demo Users', 'Demo Users have limited access, no access to DoX, and no timestamp facilities in signing portal');
+
+
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('PageAccessAuth', 1, NULL, 1);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('PageAccessAuth', 2, NULL, 2);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('PageAccessAuth', 3, NULL, 3);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('PageAccessAuth', 4, NULL, 4);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('PageAccessAuth', 5, NULL, 5);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('PageAccessAuth', 6, NULL, 3);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('SignAuth', 3, NULL, 1);
+          INSERT INTO aa_group_authorization (auth_name, group_no, param_no, "rule") VALUES ('SignAuth', 6, NULL, 2);
+
+
+          INSERT INTO user_attribute (attribute, value, "type", priority) VALUES ('username', 'admin', '00_id', 0);
+          INSERT INTO user_attribute (user_no, attribute, value, "type", priority) VALUES ((select user_no from user_attribute where attribute = 'username' and value='admin'), 'citizenshipNumber', '12345', '00_id', 0);
+          INSERT INTO user_authentication (username, "password") VALUES ('12345', '21232f297a57a5a743894a0e4a801fc3');
+
+
+          INSERT INTO aa_user_group (username, group_no, "order") VALUES ((select user_no from user_attribute where attribute = 'username' and value='admin'), 1, 1);
+          INSERT INTO aa_user_group (username, group_no, "order") VALUES ((select user_no from user_attribute where attribute = 'username' and value='admin'), 3, 2);
+          INSERT INTO aa_user_group (username, group_no, "order") VALUES ((select user_no from user_attribute where attribute = 'username' and value='admin'), 4, 3);
+          INSERT INTO aa_user_group (username, group_no, "order") VALUES ((select user_no from user_attribute where attribute = 'username' and value='admin'), 5, 4);
+        </sql>
+        <rollback/>
+    </changeSet>
+    <changeSet author="fmguler" id="20" runOnChange="true">
+        <comment>Function to delete all data from all tables. Can be updated later (runAlways is set)</comment>
+        <createProcedure><![CDATA[
+          --DROP FUNCTION db_delete_all_data();
+          CREATE OR REPLACE FUNCTION db_delete_all_data() RETURNS character varying
+              LANGUAGE plpgsql
+              AS 'DECLARE
+              table_list VARCHAR(100000);
+              mtable RECORD;
+          BEGIN
+
+             table_list := '''';
+              -- public semasinda bulunan tum tablolar, bizim tablolarimiz  
+              
+              FOR mtable IN select * from pg_tables where schemaname = ''public'' LOOP                
+                  IF position(''databasechangelog'' in mtable.tablename)>0 THEN CONTINUE; END IF;
+                  table_list := table_list || quote_ident(mtable.tablename) || '', '';
+              END LOOP;
+
+              table_list := substring(table_list from 0 for length(table_list)-1);
+
+              EXECUTE ''TRUNCATE TABLE '' || table_list;        
+                  
+              RETURN table_list;
+          END;';
+          ]]>
+        </createProcedure>
+        <rollback/>
+    </changeSet>
+    <!-- << INFRASTRUCTURE SCHEMA -->
+    <!-- WORKSPACE SCHEMA >> -->
+    <changeSet author="fmguler" id="21">
+        <createTable schemaName="public" tableName="workspace_file">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="workspace_file_pkey"/>
+            </column>
+            <column name="user_no" type="int4"/>
+            <column name="file_path" type="VARCHAR(10000)"/>
+            <column name="file_summary" type="TEXT(2147483647)"/>
+            <column name="status" type="int4"/>
+            <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="file_extension" type="VARCHAR(1024)"/>
+            <column defaultValueBoolean="false" name="temporary" type="bool">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <!-- << WORKSPACE SCHEMA -->
+    <changeSet author="fmguler" id="22">
+        <tagDatabase tag="21"/>
+    </changeSet>
+    <!-- DOX SCHEMA >> -->
+    <changeSet author="fmguler" id="23">
+        <createTable schemaName="public" tableName="dox_message">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_message_pkey"/>
+            </column>
+            <column name="type" type="int4"/>
+            <column name="subject" type="VARCHAR(10000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="TEXT(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column defaultValueNumeric="0" name="options" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="status" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="24">
+        <createTable schemaName="public" tableName="dox_message_attribute">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_message_attribute_pkey"/>
+            </column>
+            <column name="message_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="TEXT(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="order" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="25">
+        <createTable schemaName="public" tableName="dox_message_attachment">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_message_attachment_pkey"/>
+            </column>
+            <column name="message_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_type" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(10000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reference" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="flags" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="26">
+        <createTable schemaName="public" tableName="dox_content">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_attachment_content_pkey"/>
+            </column>
+            <column name="path" type="VARCHAR(10000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hash" type="VARCHAR(1024)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="27">
+        <addForeignKeyConstraint baseColumnNames="message_no" baseTableName="dox_message_attribute" baseTableSchemaName="public" constraintName="dox_message_attribute_message_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_message" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="28">
+        <addForeignKeyConstraint baseColumnNames="message_no" baseTableName="dox_message_attachment" baseTableSchemaName="public" constraintName="dox_message_attachment_message_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_message" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="29">
+        <addForeignKeyConstraint baseColumnNames="content_no" baseTableName="dox_message_attachment" baseTableSchemaName="public" constraintName="dox_message_attachment_content_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_content" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="30">
+        <tagDatabase tag="29"/>
+    </changeSet>
+    <!-- DOX SCHEMA (TRANSACTION) >> -->
+    <changeSet author="fmguler" id="31">
+        <createTable schemaName="public" tableName="dox_domain">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_domain_pkey"/>
+            </column>
+            <column name="domain" type="VARCHAR(1024)"/>
+            <column name="address" type="VARCHAR(2048)"/>
+            <column name="client_certificate" type="TEXT(2147483647)"/>
+            <column name="server_certificate" type="TEXT(2147483647)"/>
+            <column defaultValueBoolean="false" name="can_relay" type="bool">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="protocol" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="32">
+        <createTable schemaName="public" tableName="dox_transaction_log">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_transaction_log_pkey"/>
+            </column>
+            <column name="message_no" type="int4"/>
+            <column name="sender" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipient" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="sender_domain_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="recipient_domain_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="relay" type="bool">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueDate="now()" name="date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="protocol" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="status" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="details" type="TEXT(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="33">
+        <createTable schemaName="public" tableName="dox_user_message">
+            <column autoIncrement="true" name="no" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dox_user_message_pkey"/>
+            </column>
+            <column name="user_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_no" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="folder" type="int4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_log_no" type="int4"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fmguler" id="34">
+        <addForeignKeyConstraint baseColumnNames="sender_domain_no" baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_sender_domain_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_domain" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="35">
+        <addForeignKeyConstraint baseColumnNames="recipient_domain_no" baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_recipient_domain_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_domain" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="36">
+        <addForeignKeyConstraint baseColumnNames="message_no" baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_message_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_message" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="37">
+        <addForeignKeyConstraint baseColumnNames="message_no" baseTableName="dox_user_message" baseTableSchemaName="public" constraintName="dox_user_message_message_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_message" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="38">
+        <addForeignKeyConstraint baseColumnNames="transaction_log_no" baseTableName="dox_user_message" baseTableSchemaName="public" constraintName="dox_user_message_transaction_log_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_transaction_log" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="39">
+        <tagDatabase tag="38"/>
+    </changeSet>
+    <!-- DOX SCHEMA (UPDATE 1) -->
+    <changeSet author="fmguler" id="40">
+        <addColumn tableName="dox_message_attachment" schemaName="public">
+            <column name="content_length" type="int4" defaultValueNumeric="0"/>
+        </addColumn>
+        <comment>to keep track of attachment size, and tell to the browser while downloading</comment>
+    </changeSet>
+    <changeSet author="fmguler" id="41">
+        <comment>
+            change on delete cascade to on delete restrict of some foreign key constraints, since referencing tables does not belong to referenced tables
+            e.g. Msg. attachment does not belong to content, if a msg attch. exists, referenced content cannot be deleted.
+        </comment>
+        <dropForeignKeyConstraint baseTableName="dox_message_attachment" baseTableSchemaName="public" constraintName="dox_message_attachment_content_no_fkey"/>
+        <rollback changeSetId="29" changeSetAuthor="fmguler" />
+    </changeSet>
+    <changeSet author="fmguler" id="42">
+        <addForeignKeyConstraint baseTableName="dox_message_attachment" baseTableSchemaName="public" baseColumnNames="content_no"  constraintName="dox_message_attachment_content_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_content" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="43">
+        <dropForeignKeyConstraint baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_recipient_domain_no_fkey"/>
+        <rollback changeSetId="35" changeSetAuthor="fmguler" />
+    </changeSet>
+    <changeSet author="fmguler" id="44">
+        <addForeignKeyConstraint baseColumnNames="recipient_domain_no" baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_recipient_domain_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_domain" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="45">
+        <dropForeignKeyConstraint baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_sender_domain_no_fkey"/>
+        <rollback changeSetId="34" changeSetAuthor="fmguler" />
+    </changeSet>
+    <changeSet author="fmguler" id="46">
+        <addForeignKeyConstraint baseColumnNames="sender_domain_no" baseTableName="dox_transaction_log" baseTableSchemaName="public" constraintName="dox_transaction_log_sender_domain_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_domain" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="47">
+        <dropForeignKeyConstraint baseTableName="dox_user_message" baseTableSchemaName="public" constraintName="dox_user_message_transaction_log_no_fkey"/>
+        <rollback changeSetId="38" changeSetAuthor="fmguler" />
+    </changeSet>
+    <changeSet author="fmguler" id="48">
+        <addForeignKeyConstraint baseColumnNames="transaction_log_no" baseTableName="dox_user_message" baseTableSchemaName="public" constraintName="dox_user_message_transaction_log_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_transaction_log" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="49">
+        <dropForeignKeyConstraint baseTableName="dox_user_message" baseTableSchemaName="public" constraintName="dox_user_message_message_no_fkey"/>
+        <rollback changeSetId="37" changeSetAuthor="fmguler" />
+    </changeSet>
+    <changeSet author="fmguler" id="50">
+        <addForeignKeyConstraint baseColumnNames="message_no" baseTableName="dox_user_message" baseTableSchemaName="public" constraintName="dox_user_message_message_no_fkey" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="no" referencedTableName="dox_message" referencedTableSchemaName="public"/>
+    </changeSet>
+    <changeSet author="fmguler" id="51">
+        <tagDatabase tag="50"/>
+    </changeSet>
+    <!-- << DOX SCHEMA -->
+</databaseChangeLog>
