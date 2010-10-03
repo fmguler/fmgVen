@@ -20,6 +20,8 @@ package com.fmguler.ven.sample;
 import com.fmguler.ven.Ven;
 import com.fmguler.ven.sample.domain.SomeDomainObject;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.sql.DataSource;
 import liquibase.FileSystemFileOpener;
@@ -37,14 +39,63 @@ import liquibase.database.DatabaseFactory;
 public class Sample {
     public static void main(String[] args) {
         buildDatabase();
-        test1();
+        testGet();
         //rollbackDatabase();
     }
 
-    public static void test1() {
+    /**
+     * Test save an object
+     */
+    public static void testSave() {
+        Ven ven = getVen();
+
+        //insert
+        SomeDomainObject obj = new SomeDomainObject();
+        obj.setName("name");
+        obj.setDescription("desc");
+        obj.setDate(new Date());
+        ven.save(obj);
+        System.out.println(obj);
+
+        //update
+        obj.setName("name update");
+        ven.save(obj);
+        System.out.println(obj);
+    }
+
+    /**
+     * Test delete an object
+     */
+    public static void testDelete() {
+        Ven ven = getVen();
+        ven.delete(1, SomeDomainObject.class);
+    }
+
+    /**
+     * Test get an object by primary key
+     */
+    public static void testGet() {
         Ven ven = getVen();
         SomeDomainObject obj = (SomeDomainObject)ven.get(1, SomeDomainObject.class);
         System.out.println(obj);
+    }
+
+    /**
+     * Test list the collection of objects
+     */
+    public static void testList() {
+        Ven ven = getVen();
+        List objList = ven.list(SomeDomainObject.class);
+        System.out.println(objList);
+    }
+
+    /**
+     * Test list the collection of objects by some criteria
+     */
+    public static void testListByCriteria() {
+        Ven ven = getVen();
+        List objList = ven.list(SomeDomainObject.class/*, criteria */);
+        System.out.println(objList);
     }
 
     //---------------------------------------------------------

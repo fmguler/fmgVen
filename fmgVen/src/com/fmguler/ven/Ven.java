@@ -35,7 +35,7 @@ public class Ven {
         mapper = new QueryMapper();
     }
 
-    public List list() {
+    public List list(Class objectClass) {
         return null;
     }
 
