@@ -24,23 +24,23 @@ import java.util.Date;
  * @author Fatih Mehmet Güler
  */
 public class SomeDomainObject {
-    private int no;
+    private Integer id;
     private String name;
     private String description;
     private Date date;
 
     /**
-     * @return the no
+     * @return the id
      */
-    public int getNo() {
-        return no;
+    public Integer getId() {
+        return id;
     }
 
     /**
-     * @param no the no to set
+     * @param id the id to set
      */
-    public void setNo(int no) {
-        this.no = no;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -86,6 +86,6 @@ public class SomeDomainObject {
     }
 
     public String toString() {
-        return no + " " + name + " " + description + " " + date;
+        return id + " " + name + " " + description + " " + date;
     }
 }

@@ -58,7 +58,7 @@ public class SorguUretici {
             }
             if (alanSinifi.getPackage()!=null && nesnePaketleri.contains(alanSinifi.getPackage().getName()) && baglarKapsar(baglar,nesneYolu+"."+alanAdi)){ //domain nesnesi 1-1 join
                 String bagTablosuDigerAd = tabloAdi+"_"+sutunAdi; // bağ tablosu için diğer ad, çünkü aynı isimde birden fazla bağ olabilir, karışmasın
-                String bagTablosu = Cevir.vt(alanSinifi.getSimpleName());//gerçek bağ tablosu
+                String bagTablosu = Cevir.vt(Cevir.isim(alanSinifi.getName()));//gerçek bağ tablosu
                 fromCumlesi.append(" left join "+bagTablosu+" "+bagTablosuDigerAd);
                 fromCumlesi.append(" on "+bagTablosuDigerAd+".no = "+tabloAdi+"."+sutunAdi+"_no");
                 tekrarlayanSorguUret(++seviye,bagTablosuDigerAd,nesneYolu+"."+alanAdi,alanSinifi,baglar,selectCumlesi,fromCumlesi);
@@ -66,7 +66,7 @@ public class SorguUretici {
             if (wr.getPropertyValue(alanAdi) instanceof SinifBildirenLinkedList && baglarKapsar(baglar,nesneYolu+"."+alanAdi)){
                 Class cokluAlandakiNesneSinifi = (Class)wr.getPropertyValue(alanAdi+".nesneSinifi");
                 String bagTablosuDigerAd = tabloAdi+"_"+sutunAdi; // bağ tablosu için diğer ad, çünkü aynı isimde birden fazla bağ olabilir, karışmasın
-                String bagTablosu = Cevir.vt(cokluAlandakiNesneSinifi.getSimpleName());//gerçek bağ tablosu
+                String bagTablosu = Cevir.vt(Cevir.isim(cokluAlandakiNesneSinifi.getName()));//gerçek bağ tablosu
                 String bagAlani = Cevir.vt((String)wr.getPropertyValue(alanAdi+".bagAlani")); //YAP: bunu vermeden de varsayılan birşey yapsın
                 fromCumlesi.append(" left join "+bagTablosu+" "+bagTablosuDigerAd);
                 fromCumlesi.append(" on "+bagTablosuDigerAd+"."+bagAlani+"_no = "+tabloAdi+".no");
@@ -92,7 +92,7 @@ public class SorguUretici {
      */
     public String secmeSorgusuUret(Set baglar, Class nesneSinifi){
         //long t1 = System.currentTimeMillis();
-        String nesneAdi = nesneSinifi.getSimpleName();
+        String nesneAdi = Cevir.isim(nesneSinifi.getName());
         String tabloAdi = Cevir.vt(nesneAdi);
         StringBuffer selectCumlesi = new StringBuffer("select ");
         StringBuffer fromCumlesi = new StringBuffer("from "+tabloAdi);
@@ -107,7 +107,7 @@ public class SorguUretici {
      */
     public String saymaSorgusuUret(Set baglar, Class nesneSinifi){
         //long t1 = System.currentTimeMillis();
-        String nesneAdi = nesneSinifi.getSimpleName();
+        String nesneAdi = Cevir.isim(nesneSinifi.getName());
         String tabloAdi = Cevir.vt(nesneAdi);
         StringBuffer selectCumlesi = new StringBuffer();
         StringBuffer fromCumlesi = new StringBuffer("from "+tabloAdi);
@@ -122,7 +122,7 @@ public class SorguUretici {
      */
     public String guncellemeSorgusuUret(Object nesne){
         BeanWrapper wr = new BeanWrapperImpl(nesne);
-        String nesneAdi = nesne.getClass().getSimpleName();
+        String nesneAdi = Cevir.isim(nesne.getClass().getName());
         String tabloAdi = Cevir.vt(nesneAdi);
         StringBuffer sorgu;
         PropertyDescriptor[] pdArr = wr.getPropertyDescriptors();

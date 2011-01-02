@@ -34,5 +34,11 @@ public class Cevir {
         }
         return sonuc.toString();
     }
+
+    public static String isim(String isim) {
+        int i = isim.lastIndexOf(".");
+        if (i < 0) return isim;
+        return isim.substring(i + 1);
+    }
     
 }

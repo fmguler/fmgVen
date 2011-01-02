@@ -39,8 +39,8 @@ import liquibase.database.DatabaseFactory;
 public class Sample {
     public static void main(String[] args) {
         buildDatabase();
-        testGet();
-        //rollbackDatabase();
+        testSave();
+        rollbackDatabase();
     }
 
     /**
@@ -138,8 +138,7 @@ public class Sample {
             Locale.setDefault(Locale.ENGLISH);
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDataSource().getConnection());
             Liquibase liquibase = new Liquibase("etc/test-db/test-db-changelog.xml", new FileSystemFileOpener(), database);
-            //liquibase.rollback(51, "");
-            liquibase.rollback("0", "");
+            liquibase.rollback("tag-single-table", "");
             Locale.setDefault(currLocale);
         } catch (SQLException ex) {
             ex.printStackTrace();

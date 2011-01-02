@@ -47,7 +47,7 @@ public class Ven {
     public List nesneleriAl(Class nesneSinifi, Integer kullanimNo){
         Set baglar = new HashSet();
         kullanimlar.put(kullanimNo,baglar);
-        baglar.add(nesneSinifi.getSimpleName());
+        baglar.add(Cevir.isim(nesneSinifi.getName()));
         
         String sorgu = uretici.secmeSorgusuUret(baglar, nesneSinifi);
         if(hataAyiklama) System.out.println("SQL: "+sorgu);
@@ -110,7 +110,7 @@ public class Ven {
      */
     public Object nesneAl(Class nesneSinifi, Integer no, Set baglar){
         String sorgu = uretici.secmeSorgusuUret(baglar, nesneSinifi);
-        Olcut olcut = new Olcut().ekle("and "+Cevir.vt(nesneSinifi.getSimpleName())+".no = :___no").ekle("___no",no);
+        Olcut olcut = new Olcut().ekle("and "+Cevir.vt(Cevir.isim(nesneSinifi.getName()))+".no = :___no").ekle("___no",no);
         sorgu += " where 1=1"+olcut.olcutleriAl();
         if(hataAyiklama) System.out.println("SQL: "+sorgu);
         
@@ -126,7 +126,7 @@ public class Ven {
      */
     public Object nesneAl(Class nesneSinifi, Integer no, Set baglar, Olcut olcut){
         String sorgu = uretici.secmeSorgusuUret(baglar, nesneSinifi);
-        sorgu += " where 1=1 and "+Cevir.vt(nesneSinifi.getSimpleName())+".no = :___no "+olcut.olcutleriAl(); //No diğer ölçütlerden önce gelmeli order-limit için
+        sorgu += " where 1=1 and "+Cevir.vt(Cevir.isim(nesneSinifi.getName()))+".no = :___no "+olcut.olcutleriAl(); //No diğer ölçütlerden önce gelmeli order-limit için
         olcut.ekle("___no",no);
         if(hataAyiklama) System.out.println("SQL: "+sorgu);
         
@@ -144,12 +144,12 @@ public class Ven {
         //YAP: yeni eklenenin nosunu almak için daha etkin bir yöntem bulunabilir (üreticinin içinde deki beanwrapper kullanılabilir vs)
         BeanWrapper wr = new BeanWrapperImpl(nesne);
         if(wr.getPropertyValue("no")==null){            
-            wr.setPropertyValue("no",new Integer(sablon.queryForInt("select currval('"+Cevir.vt(nesne.getClass().getSimpleName())+"_no')", new HashMap())));
+            wr.setPropertyValue("no",new Integer(sablon.queryForInt("select currval('"+Cevir.vt(Cevir.isim(nesne.getClass().getName()))+"_no')", new HashMap())));
         }
     }
     
     public void nesneSil(Integer no, Class nesneSinifi){
-        String sorgu = "delete from "+Cevir.vt(nesneSinifi.getSimpleName())+" where no = :no ;";
+        String sorgu = "delete from "+Cevir.vt(Cevir.isim(nesneSinifi.getName()))+" where no = :no ;";
         Map parametreler = new HashMap(2);
         parametreler.put("no",no);
         sablon.update(sorgu,parametreler);

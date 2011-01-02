@@ -17,9 +17,14 @@
  */
 package com.fmguler.ven;
 
+import java.util.HashMap;
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 /**
  * The main class for data access
@@ -43,17 +48,58 @@ public class Ven {
         return 0;
     }
 
-    public Object get(int no, Class objectClass) {
+    public Object get(int id, Class objectClass) {
         return null;
     }
 
+    /**
+     * Save the object. If it has a "id" property it will be updated.
+     * It will be inserted otherwise.
+     * <p>
+     * The object will be saved to a table with the same name as the object,
+     * The fields of object will be mapped to the table fields.
+     * 
+     * @param object the object to be saved
+     */
     public void save(Object object) {
+        String query = null;
+
+        if (isObjectNew(object)) {
+            //if this is a new object assign a new id first
+            generateId(object);
+            query = generator.generateInsertQuery(object);
+        } else {
+            query = generator.generateUpdateQuery(object);
+        }
+
+        //execute the insert/update query
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(object);
+        template.update(query, parameterSource);
     }
 
-    public void delete(int no, Class objectClass) {
+    public void delete(int id, Class objectClass) {
     }
 
-    //SETTERS-------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //PRIVATE METHODS
+    //return true if the object id is zero or null false otherwise
+    private boolean isObjectNew(Object object) throws VenException {
+        BeanWrapper beanWrapper = new BeanWrapperImpl(object);
+        Object objectId = beanWrapper.getPropertyValue("id"); 
+        if (objectId == null) return true;
+        if (!(objectId instanceof Integer)) throw new VenException(VenException.EC_GENERATOR_OBJECT_ID_TYPE_INVALID);
+        return ((Integer)objectId).intValue() == 0;
+    }
+
+    //set new object id
+    private void generateId(Object object) {
+        Integer newObjectId = new Integer(template.queryForInt(generator.generateSequenceQuery(object), new HashMap()));
+        BeanWrapper beanWrapper = new BeanWrapperImpl(object);
+        beanWrapper.setPropertyValue("id", newObjectId);
+    }
+
+    //--------------------------------------------------------------------------
+    //SETTERS
     public void setDataSource(DataSource dataSource) {
         if (dataSource == null) throw new RuntimeException("fmgVen - DataSource cannot be null");
         this.template = new NamedParameterJdbcTemplate(dataSource);

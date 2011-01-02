@@ -56,7 +56,7 @@ public class SorguEslestirici{
     public List listele(String sorgu, Map parametreler, final Class nesneSinifi){
         long t1 = System.currentTimeMillis();
         final List sonuclar = new LinkedList();
-        final String tabloAdi = Cevir.vt(nesneSinifi.getSimpleName());
+        final String tabloAdi = Cevir.vt(Cevir.isim(nesneSinifi.getName()));
         final Set sutunlar = new HashSet();
         
         sablon.query(sorgu,parametreler,new RowCallbackHandler(){

@@ -6,7 +6,6 @@
  *
  * Ven - Ayar Yerine Gelenek veritabanı erişim nesnesi
  */
-
 package net.fmg.ven;
 
 import java.util.HashMap;
@@ -24,89 +23,88 @@ public class Olcut {
     private String metin;
     private Map parametreler;
     private Set baglaclar;
-    
+
     /** 
      * Yeni ölçüt
      */
     public Olcut() {
         this.metin = "";
         this.parametreler = new HashMap();
-        this.baglaclar =  new HashSet();
+        this.baglaclar = new HashSet();
         //{"and", "or", "=", "<>", "<", ">"}
     }
-    
+
     /**
      * YAPILMADI
      */
-    public Olcut ekle(Olcut olcut){        
+    public Olcut ekle(Olcut olcut) {
         return null;
     }
-    
+
     /**
      * YAPILMADI
      */
-    public Olcut ekle(List olcutler){        
+    public Olcut ekle(List olcutler) {
         return null;
     }
-    
+
     /**
      * YAPILMADI
      */
-    public Olcut ve(){
+    public Olcut ve() {
         return null;
     }
-    
+
     /**
      * koşul ekle
      */
-    public Olcut ekle(String kosul){
-        this.metin +=" "+kosul;
+    public Olcut ekle(String kosul) {
+        this.metin += " " + kosul;
         return this;
     }
-    
+
     /**
      * koşullarda kullanılan parametreleri ekle
      */
-    public Olcut ekle(String parametre, Object nesne){
-        this.parametreler.put(parametre,nesne);
+    public Olcut ekle(String parametre, Object nesne) {
+        this.parametreler.put(parametre, nesne);
         return this;
     }
-    
+
     /**
      * koşullarda kullanılan parametreleri tümden ekle
      */
-    public Olcut ekle(Map parametreler){
+    public Olcut ekle(Map parametreler) {
         this.parametreler.putAll(parametreler);
         return this;
     }
-    
-    public String olcutleriAl(){
+
+    public String olcutleriAl() {
         //((1=1) and ((1=1) and (musteri_numuneler_numune_sahibi.rapor_tarihi is null) and (musteri.no = 4)))
         //Musteri.numuneler.deneyler.deneyTip.ad like :p1
         String sonuc = "";
-        metin = metin.replace("(","( ");
-        metin = metin.replace(")"," )");
+        metin = metin.replaceAll("\\(", "\\( ");
+        metin = metin.replaceAll("\\)", " \\)");
         String[] parcalar = metin.split(" ");
         for (int i = 0; i < parcalar.length; i++) {
-            if (!parcalar[i].startsWith(":") && parcalar[i].contains(".")){
-                int sonNokta = parcalar[i].lastIndexOf('.');                
+            if (!parcalar[i].startsWith(":") && parcalar[i].indexOf(".") >= 0) {
+                int sonNokta = parcalar[i].lastIndexOf('.');
                 sonuc += " ";
-                int u = parcalar[i].length();                
-                sonuc +=Cevir.vt(parcalar[i].substring(0,sonNokta).replace('.','_'));
-                sonuc +=Cevir.vt(parcalar[i].substring(sonNokta,u));
-            }else{
-                sonuc += " "+parcalar[i];
+                int u = parcalar[i].length();
+                sonuc += Cevir.vt(parcalar[i].substring(0, sonNokta).replace('.', '_'));
+                sonuc += Cevir.vt(parcalar[i].substring(sonNokta, u));
+            } else {
+                sonuc += " " + parcalar[i];
             }
         }
         return sonuc;
     }
-    
-    public Map parametreler(){
+
+    public Map parametreler() {
         return this.parametreler;
     }
 
     public String toString() {
-        return olcutleriAl()+" "+this.parametreler;
+        return olcutleriAl() + " " + this.parametreler;
     }
-    
 }
