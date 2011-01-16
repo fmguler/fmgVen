@@ -21,6 +21,7 @@
     </changeSet>
     <changeSet author="fmguler" id="3">
         <insert schemaName="public" tableName="some_domain_object">
+            <column name="id" value="1"/>
             <column name="name" value="name1"/>
             <column name="description" value="desc1"/>
             <column name="date" value="2010-10-13"/>

@@ -26,7 +26,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 /**
- * Generates queries in the form of 'Convention over Configuration' of the specified class.
+ * Generates queries in the form of 'Convention over Configuration' for the specified objects.
  * @author Fatih Mehmet Güler
  */
 public class QueryGenerator {
@@ -52,7 +52,12 @@ public class QueryGenerator {
         return null;
     }
 
-    public String generateInsertQuery(Object object) throws VenException {
+    /**
+     * Generates insert query for the specified object
+     * @param object the object to generate insert query for
+     * @return the insert SQL query
+     */
+    public String generateInsertQuery(Object object) {
         BeanWrapper wr = new BeanWrapperImpl(object);
         String objectName = Convert.toSimpleName(object.getClass().getName());
         String tableName = Convert.toDB(objectName);
@@ -89,8 +94,9 @@ public class QueryGenerator {
     }
 
     /**
-     * Generates insert/update query
-     * @return the insert update SQL query
+     * Generates update query for the specified object
+     * @param object the object to generate update query for
+     * @return the update SQL query
      */
     public String generateUpdateQuery(Object object) throws VenException {
         BeanWrapper wr = new BeanWrapperImpl(object);
@@ -113,10 +119,26 @@ public class QueryGenerator {
             }
         }
         query.deleteCharAt(query.length() - 1);
-        query.append(" where id = :id ;"); //TODO: remove the last comma
+        query.append(" where id = :id ;");
         return query.toString();
     }
 
+    /**
+     * Generates delete query for the specified object class
+     * @param objectClass the object class to generate query for
+     * @return the delete SQL query
+     */
+    public String generateDeleteQuery(Class objectClass){
+        StringBuffer query = new StringBuffer();
+        query.append("delete from ").append(Convert.toDB(Convert.toSimpleName(objectClass.getName()))).append(" where id = :id;");
+        return query.toString();
+    }
+        
+    /**
+     * Generates sequence query for the specified object
+     * @param object the objectc to generate sequence query for
+     * @return the SQL query to select next id
+     */
     public String generateSequenceQuery(Object object) throws VenException {
         String objectName = Convert.toSimpleName(object.getClass().getName());
         String tableName = Convert.toDB(objectName);

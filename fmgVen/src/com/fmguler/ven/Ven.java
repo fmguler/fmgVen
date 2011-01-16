@@ -19,6 +19,7 @@ package com.fmguler.ven;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -53,7 +54,7 @@ public class Ven {
     }
 
     /**
-     * Save the object. If it has a "id" property it will be updated.
+     * Save the object. If it has a non null (or non zero) "id" property it will be updated.
      * It will be inserted otherwise.
      * <p>
      * The object will be saved to a table with the same name as the object,
@@ -77,7 +78,16 @@ public class Ven {
         template.update(query, parameterSource);
     }
 
+    /**
+     * Delete the the object with the specified id of the specified objectClass type
+     * @param id the id of the object to be deleted
+     * @param objectClass the class of the object to be deleted
+     */
     public void delete(int id, Class objectClass) {
+        String query = generator.generateDeleteQuery(objectClass);
+        Map parameterMap = new HashMap();
+        parameterMap.put("id", new Integer(id));
+        template.update(query, parameterMap);
     }
 
     //--------------------------------------------------------------------------
@@ -85,7 +95,7 @@ public class Ven {
     //return true if the object id is zero or null false otherwise
     private boolean isObjectNew(Object object) throws VenException {
         BeanWrapper beanWrapper = new BeanWrapperImpl(object);
-        Object objectId = beanWrapper.getPropertyValue("id"); 
+        Object objectId = beanWrapper.getPropertyValue("id");
         if (objectId == null) return true;
         if (!(objectId instanceof Integer)) throw new VenException(VenException.EC_GENERATOR_OBJECT_ID_TYPE_INVALID);
         return ((Integer)objectId).intValue() == 0;

@@ -38,8 +38,15 @@ import liquibase.database.DatabaseFactory;
  */
 public class Sample {
     public static void main(String[] args) {
+        //build the sample database
         buildDatabase();
+
+        //save an object
         testSave();
+        //delete an object
+        testDelete();
+
+        //rollback the sample database to original state
         rollbackDatabase();
     }
 
