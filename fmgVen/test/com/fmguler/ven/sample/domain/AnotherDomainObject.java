@@ -1,6 +1,6 @@
 /*
  *  fmgVen - A Convention over Configuration Java ORM Tool
- *  Copyright 2010 Fatih Mehmet Güler
+ *  Copyright 2011 Fatih Mehmet Güler
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,21 +17,18 @@
  */
 package com.fmguler.ven.sample.domain;
 
-import com.fmguler.ven.util.VenList;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
  * @author Fatih Mehmet Güler
  */
-public class SomeDomainObject {
+public class AnotherDomainObject {
     private Integer id;
     private String name;
     private String description;
     private Date date;
-    private List anotherDomainObjects = new VenList(AnotherDomainObject.class, "someDomainObject");
-    private AnotherDomainObject anotherDomainObject = new AnotherDomainObject();
+    private SomeDomainObject someDomainObject;
 
     /**
      * @return the id
@@ -90,27 +87,20 @@ public class SomeDomainObject {
     }
 
     /**
-     * @return the list of AnotherDomainObject
+     * @return the someDomainObject
      */
-    public List getAnotherDomainObjects() {
-        return anotherDomainObjects;
+    public SomeDomainObject getSomeDomainObject() {
+        return someDomainObject;
     }
 
     /**
-     * @return the anotherDomainObject
+     * @param someDomainObject the someDomainObject to set
      */
-    public AnotherDomainObject getAnotherDomainObject() {
-        return anotherDomainObject;
-    }
-
-    /**
-     * @param anotherDomainObject the anotherDomainObject to set
-     */
-    public void setAnotherDomainObject(AnotherDomainObject anotherDomainObject) {
-        this.anotherDomainObject = anotherDomainObject;
+    public void setSomeDomainObject(SomeDomainObject someDomainObject) {
+        this.someDomainObject = someDomainObject;
     }
 
     public String toString() {
-        return id + " " + name + " " + description + " another domain object: {" + anotherDomainObject + "} another domain objects:\n" + anotherDomainObjects;
+        return id + " " + name + " " + description + " some domain object: {" + someDomainObject + "}";
     }
 }

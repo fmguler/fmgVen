@@ -17,20 +17,14 @@
  */
 package com.fmguler.ven.sample;
 
+import com.fmguler.ven.LiquibaseUtil;
 import com.fmguler.ven.Ven;
+import com.fmguler.ven.sample.domain.AnotherDomainObject;
 import com.fmguler.ven.sample.domain.SomeDomainObject;
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import javax.sql.DataSource;
-import liquibase.FileSystemFileOpener;
-import liquibase.exception.JDBCException;
-import liquibase.exception.LiquibaseException;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import liquibase.Liquibase;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
+import java.util.Set;
 
 /**
  * Demonstrates sample usage of fmgVen.
@@ -39,15 +33,17 @@ import liquibase.database.DatabaseFactory;
 public class Sample {
     public static void main(String[] args) {
         //build the sample database
-        buildDatabase();
+        LiquibaseUtil.buildDatabase();
 
         //save an object
         testSave();
+        //get an object
+        testGet();
         //delete an object
         testDelete();
 
         //rollback the sample database to original state
-        rollbackDatabase();
+        LiquibaseUtil.rollbackDatabase("tag-init");
     }
 
     /**
@@ -75,7 +71,7 @@ public class Sample {
      */
     public static void testDelete() {
         Ven ven = getVen();
-        ven.delete(1, SomeDomainObject.class);
+        ven.delete(2, SomeDomainObject.class);
     }
 
     /**
@@ -83,8 +79,18 @@ public class Sample {
      */
     public static void testGet() {
         Ven ven = getVen();
-        SomeDomainObject obj = (SomeDomainObject)ven.get(1, SomeDomainObject.class);
+
+        //get with includes
+        Set joins = new HashSet();
+        joins.add("SomeDomainObject.anotherDomainObjects");
+        joins.add("SomeDomainObject.anotherDomainObject");
+        SomeDomainObject obj = (SomeDomainObject)ven.get(1, SomeDomainObject.class, joins);
         System.out.println(obj);
+
+        Set joins2 = new HashSet();
+        joins2.add("AnotherDomainObject.someDomainObject");
+        AnotherDomainObject obj2 = (AnotherDomainObject)ven.get(1, AnotherDomainObject.class, joins2);
+        System.out.println(obj2);
     }
 
     /**
@@ -108,51 +114,8 @@ public class Sample {
     //---------------------------------------------------------
     private static Ven getVen() {
         Ven ven = new Ven();
-        ven.setDataSource(getDataSource());
+        ven.setDataSource(LiquibaseUtil.getDataSource());
         ven.addDomainPackage("com.fmguler.ven.sample.domain").addDomainPackage("another.package");
         return ven;
-    }
-
-    private static DataSource getDataSource() {
-        DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUsername("postgres");
-        ds.setPassword("qwerty");
-        ds.setUrl("jdbc:postgresql://127.0.0.1:5432/ven-test");
-        return ds;
-    }
-
-    private static void buildDatabase() {
-        try {
-            Locale currLocale = Locale.getDefault();
-            Locale.setDefault(Locale.ENGLISH);
-            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDataSource().getConnection());
-            Liquibase liquibase = new Liquibase("etc/test-db/test-db-changelog.xml", new FileSystemFileOpener(), database);
-            liquibase.update("");
-            Locale.setDefault(currLocale);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (JDBCException ex) {
-            ex.printStackTrace();
-        } catch (LiquibaseException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private static void rollbackDatabase() {
-        try {
-            Locale currLocale = Locale.getDefault();
-            Locale.setDefault(Locale.ENGLISH);
-            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDataSource().getConnection());
-            Liquibase liquibase = new Liquibase("etc/test-db/test-db-changelog.xml", new FileSystemFileOpener(), database);
-            liquibase.rollback("tag-single-table", "");
-            Locale.setDefault(currLocale);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (JDBCException ex) {
-            ex.printStackTrace();
-        } catch (LiquibaseException ex) {
-            ex.printStackTrace();
-        }
     }
 }

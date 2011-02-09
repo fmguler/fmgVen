@@ -17,9 +17,11 @@
  */
 package com.fmguler.ven;
 
+import com.fmguler.ven.util.Convert;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.sql.DataSource;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -35,6 +37,7 @@ public class Ven {
     private NamedParameterJdbcTemplate template;
     private QueryGenerator generator;
     private QueryMapper mapper;
+    private boolean debug = true;
 
     public Ven() {
         generator = new QueryGenerator();
@@ -49,8 +52,18 @@ public class Ven {
         return 0;
     }
 
-    public Object get(int id, Class objectClass) {
-        return null;
+    public Object get(int id, Class objectClass, Set joins) {
+        String query = generator.generateSelectQuery(objectClass, joins);
+        query += " where 1=1 and " + Convert.toDB(Convert.toSimpleName(objectClass.getName())) + ".id = :___id ";
+
+        Map paramMap = new HashMap();
+        paramMap.put("___id", new Integer(id));
+        if (debug) System.out.println("Ven - SQL: " + query);
+
+        List result = mapper.list(query, paramMap, objectClass);
+        if (result.isEmpty()) return null;
+        if (result.size() > 1) System.out.println("Ven - WARNING >> get(id) returns more than one row");
+        return result.get(0);
     }
 
     /**
@@ -113,6 +126,7 @@ public class Ven {
     public void setDataSource(DataSource dataSource) {
         if (dataSource == null) throw new RuntimeException("fmgVen - DataSource cannot be null");
         this.template = new NamedParameterJdbcTemplate(dataSource);
+        mapper.setDataSource(dataSource);
     }
 
     public Ven addDomainPackage(String domainPackage) {

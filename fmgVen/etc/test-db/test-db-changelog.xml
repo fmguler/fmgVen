@@ -14,24 +14,53 @@
             <column name="name" type="VARCHAR(100)"/>
             <column name="description" type="TEXT(2147483647)"/>
             <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="another_domain_object_id" type="int"/>
         </createTable>
     </changeSet>
     <changeSet author="fmguler" id="2">
-        <tagDatabase tag="tag-single-table"/>
+        <createTable schemaName="public" tableName="another_domain_object">
+            <column autoIncrement="true" name="id" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="another_domain_object_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+            <column name="description" type="TEXT(2147483647)"/>
+            <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="some_domain_object_id" type="int"/>
+        </createTable>
     </changeSet>
     <changeSet author="fmguler" id="3">
+        <tagDatabase tag="tag-no-data"/>
+    </changeSet>
+    <changeSet author="fmguler" id="4">
         <insert schemaName="public" tableName="some_domain_object">
-            <column name="id" value="1"/>
-            <column name="name" value="name1"/>
-            <column name="description" value="desc1"/>
+            <column name="name" value="sdo1"/>
+            <column name="description" value="sdo desc1"/>
             <column name="date" value="2010-10-13"/>
+            <column name="another_domain_object_id" value="1"/>
         </insert>
         <rollback>
             delete from some_domain_object;
         </rollback>
     </changeSet>
-    <changeSet author="fmguler" id="4">
-        <tagDatabase tag="tag-single-table-data"/>
+    <changeSet author="fmguler" id="5">
+        <insert schemaName="public" tableName="another_domain_object">
+            <column name="name" value="ado1"/>
+            <column name="description" value="ado desc1"/>
+            <column name="date" value="2011-01-19"/>
+            <column name="some_domain_object_id" value="1"/>
+        </insert>
+        <insert schemaName="public" tableName="another_domain_object">
+            <column name="name" value="ado2"/>
+            <column name="description" value="ado desc2"/>
+            <column name="date" value="2011-02-09"/>
+            <column name="some_domain_object_id" value="1"/>
+        </insert>
+        <rollback>
+            delete from another_domain_object;
+        </rollback>
+    </changeSet>
+    <changeSet author="fmguler" id="6">
+        <tagDatabase tag="tag-data"/>
     </changeSet>
     <!-- << TEST SCHEMA -->
 </databaseChangeLog>
