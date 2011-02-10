@@ -44,14 +44,22 @@ public class Ven {
         mapper = new QueryMapper();
     }
 
-    public List list(Class objectClass) {
-        return null;
-    }
-
     public int count() {
         return 0;
     }
 
+    /**
+     * Get the object with the specified id, of the specified objectClass type.
+     * <p>
+     * By default none of the associations will be retrieved.
+     * To include the object associations (retrieve the object graph) joins should be specified, e.g.
+     * <code>SomeObject.anotherObject</code>
+     * 
+     * @param id the id of the object to be retrieved
+     * @param objectClass the class of the object to be retrieved
+     * @param joins the set of object graphs to be included with the object
+     * @return the retrieved object including specified associations
+     */
     public Object get(int id, Class objectClass, Set joins) {
         String query = generator.generateSelectQuery(objectClass, joins);
         query += " where 1=1 and " + Convert.toDB(Convert.toSimpleName(objectClass.getName())) + ".id = :___id ";
@@ -64,6 +72,27 @@ public class Ven {
         if (result.isEmpty()) return null;
         if (result.size() > 1) System.out.println("Ven - WARNING >> get(id) returns more than one row");
         return result.get(0);
+    }
+
+    /**
+     * List the objects of the specified objectClass type.
+     * <p>
+     * By default none of the associations will be retrieved.
+     * To include the object associations (retrieve the object graph) joins should be specified, e.g.
+     * <code>SomeObject.anotherObject</code>
+     * 
+     * @param objectClass the class of the objects to be retrieved
+     * @param joins the set of object graphs to be included with objects
+     * @return the list of objects including specified associations
+     */
+    public List list(Class objectClass, Set joins) {
+        String query = generator.generateSelectQuery(objectClass, joins);
+
+        Map paramMap = new HashMap();
+        if (debug) System.out.println("Ven - SQL: " + query);
+
+        List result = mapper.list(query, paramMap, objectClass);
+        return result;
     }
 
     /**
@@ -123,12 +152,22 @@ public class Ven {
 
     //--------------------------------------------------------------------------
     //SETTERS
+    /**
+     * Set the DataSource to be used to access to the database
+     */
     public void setDataSource(DataSource dataSource) {
         if (dataSource == null) throw new RuntimeException("fmgVen - DataSource cannot be null");
         this.template = new NamedParameterJdbcTemplate(dataSource);
         mapper.setDataSource(dataSource);
     }
 
+    /**
+     * Add the domain packages that have corresponding database tables.
+     * <p>
+     * The objects in these packages are considered persistable.
+     * @param domainPackage the package of the entity classes.
+     * @return this instance to allow chaining.
+     */
     public Ven addDomainPackage(String domainPackage) {
         generator.addDomainPackage(domainPackage);
         mapper.addDomainPackage(domainPackage);

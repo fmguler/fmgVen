@@ -101,6 +101,6 @@ public class AnotherDomainObject {
     }
 
     public String toString() {
-        return id + " " + name + " " + description + " some domain object: {" + someDomainObject + "}";
+        return "{" + id + ", " + name + ", " + description + ", some domain object: " + someDomainObject + "}";
     }
 }

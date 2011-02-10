@@ -23,6 +23,7 @@ import com.fmguler.ven.sample.domain.AnotherDomainObject;
 import com.fmguler.ven.sample.domain.SomeDomainObject;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +40,8 @@ public class Sample {
         testSave();
         //get an object
         testGet();
+        //list the objects
+        testList();
         //delete an object
         testDelete();
 
@@ -50,6 +53,7 @@ public class Sample {
      * Test save an object
      */
     public static void testSave() {
+        System.out.println("******SAVE******");
         Ven ven = getVen();
 
         //insert
@@ -70,6 +74,7 @@ public class Sample {
      * Test delete an object
      */
     public static void testDelete() {
+        System.out.println("******DELETE******");
         Ven ven = getVen();
         ven.delete(2, SomeDomainObject.class);
     }
@@ -78,6 +83,7 @@ public class Sample {
      * Test get an object by primary key
      */
     public static void testGet() {
+        System.out.println("******GET******");
         Ven ven = getVen();
 
         //get with includes
@@ -97,9 +103,20 @@ public class Sample {
      * Test list the collection of objects
      */
     public static void testList() {
+        System.out.println("******LIST******");
         Ven ven = getVen();
-        List objList = ven.list(SomeDomainObject.class);
-        System.out.println(objList);
+
+        //list with includes
+        Set joins = new HashSet();
+        joins.add("SomeDomainObject.anotherDomainObjects");
+        joins.add("SomeDomainObject.anotherDomainObject");
+        List objList = ven.list(SomeDomainObject.class, joins);
+        
+        Iterator it = objList.iterator();
+        while (it.hasNext()) {
+            SomeDomainObject someDomainObject = (SomeDomainObject)it.next();
+            System.out.println(someDomainObject);
+        }
     }
 
     /**
@@ -107,8 +124,8 @@ public class Sample {
      */
     public static void testListByCriteria() {
         Ven ven = getVen();
-        List objList = ven.list(SomeDomainObject.class/*, criteria */);
-        System.out.println(objList);
+        //List objList = ven.list(SomeDomainObject.class/*, criteria */);
+        //System.out.println(objList);
     }
 
     //---------------------------------------------------------
