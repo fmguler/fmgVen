@@ -17,6 +17,7 @@
  */
 package com.fmguler.ven.sample;
 
+import com.fmguler.ven.Criteria;
 import com.fmguler.ven.LiquibaseUtil;
 import com.fmguler.ven.Ven;
 import com.fmguler.ven.sample.domain.AnotherDomainObject;
@@ -42,6 +43,10 @@ public class Sample {
         testGet();
         //list the objects
         testList();
+        //list the objects by some criteria string
+        testListByCriteriaString();
+        //list the objects by some typed criteria
+        testListByCriteriaObject();
         //delete an object
         testDelete();
 
@@ -111,7 +116,7 @@ public class Sample {
         joins.add("SomeDomainObject.anotherDomainObjects");
         joins.add("SomeDomainObject.anotherDomainObject");
         List objList = ven.list(SomeDomainObject.class, joins);
-        
+
         Iterator it = objList.iterator();
         while (it.hasNext()) {
             SomeDomainObject someDomainObject = (SomeDomainObject)it.next();
@@ -120,12 +125,59 @@ public class Sample {
     }
 
     /**
-     * Test list the collection of objects by some criteria
+     * Test list the collection of objects by some criteria (string)
      */
-    public static void testListByCriteria() {
+    public static void testListByCriteriaString() {
         Ven ven = getVen();
-        //List objList = ven.list(SomeDomainObject.class/*, criteria */);
-        //System.out.println(objList);
+
+        //these objects will be included
+        Set joins = new HashSet();
+        joins.add("SomeDomainObject.anotherDomainObjects");
+        joins.add("SomeDomainObject.anotherDomainObject");
+
+        //the results will be filtered according to this criteria
+        Criteria criteria = new Criteria() //criteria object
+                //.param("and SomeDomainObject.name like :p1").param("p1", "s%")
+                .add("and SomeDomainObject.anotherDomainObjects.name like :p2").param("p2", "a%");
+
+
+        //list with includes and criteria
+        List objList = ven.list(SomeDomainObject.class, joins, criteria);
+
+        //print the results
+        Iterator it = objList.iterator();
+        while (it.hasNext()) {
+            SomeDomainObject someDomainObject = (SomeDomainObject)it.next();
+            System.out.println(someDomainObject);
+        }
+    }
+
+    /**
+     * Test list the collection of objects by some criteria (object)
+     */
+    public static void testListByCriteriaObject() {
+        Ven ven = getVen();
+
+        //these objects will be included
+        Set joins = new HashSet();
+        joins.add("SomeDomainObject.anotherDomainObjects");
+        joins.add("SomeDomainObject.anotherDomainObject");
+
+        //the results will be filtered according to this criteria
+        Criteria criteria = new Criteria() //criteria object
+                .like("SomeDomainObject.anotherDomainObjects.name", "a%") //attribute like value
+                .eq("SomeDomainObject.name", "sdo1") //attribute equals value
+                .and(); //connects previous criteria with and
+
+        //list with includes and criteria
+        List objList = ven.list(SomeDomainObject.class, joins, criteria);
+
+        //print the results
+        Iterator it = objList.iterator();
+        while (it.hasNext()) {
+            SomeDomainObject someDomainObject = (SomeDomainObject)it.next();
+            System.out.println(someDomainObject);
+        }
     }
 
     //---------------------------------------------------------

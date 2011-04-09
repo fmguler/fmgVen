@@ -96,6 +96,28 @@ public class Ven {
     }
 
     /**
+     * List the objects of the specified objectClass type, filtering according to some criteria.
+     * <p>
+     * By default none of the associations will be retrieved.
+     * To include the object associations (retrieve the object graph) joins should be specified, e.g.
+     * <code>SomeObject.anotherObject</code>
+     * 
+     * @param objectClass the class of the objects to be retrieved
+     * @param joins the set of object graphs to be included with objects
+     * @param criteria to filter and order the result according to some criteria
+     * @return the list of objects including the specified associations filtered according to the specified criteria
+     */
+    public List list(Class objectClass, Set joins, Criteria criteria) {
+        String query = generator.generateSelectQuery(objectClass, joins);
+        query += " where 1=1 " + criteria.criteriaStringToSQL() + " and " + criteria.criteriaToSQL();
+
+        if (debug) System.out.println("Ven - SQL: " + query);
+
+        List result = mapper.list(query, criteria.getParameters(), objectClass);
+        return result;
+    }
+
+    /**
      * Save the object. If it has a non null (or non zero) "id" property it will be updated.
      * It will be inserted otherwise.
      * <p>
