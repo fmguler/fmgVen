@@ -37,7 +37,7 @@ public class Ven {
     private NamedParameterJdbcTemplate template;
     private QueryGenerator generator;
     private QueryMapper mapper;
-    private boolean debug = true;
+    private boolean debug = false;
 
     public Ven() {
         generator = new QueryGenerator();
@@ -194,5 +194,17 @@ public class Ven {
         generator.addDomainPackage(domainPackage);
         mapper.addDomainPackage(domainPackage);
         return this;
+    }
+
+    /**
+     * Set debug mode, true will log all debug messages to System.out
+     * <p>
+     * Note: Use debug mode to detect problems only. It is not a general purpose logging mode.
+     * @param debug set true to enable debug mode
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+        generator.setDebug(debug);
+        mapper.setDebug(debug);
     }
 }

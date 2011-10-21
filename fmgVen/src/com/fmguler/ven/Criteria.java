@@ -103,7 +103,7 @@ public class Criteria {
     /**
      * Add a criterion where an attribue equals a value (SQL = operator)
      */
-    public Criteria eq(String attribute, String value) {
+    public Criteria eq(String attribute, Object value) {
         criterionList.add(new Criterion(attribute, Criterion.OP_EQUALS, value));
         return this;
     }
@@ -111,7 +111,7 @@ public class Criteria {
     /**
      * Add a criterion where an attribue is like a value (SQL like operator)
      */
-    public Criteria like(String attribute, String value) {
+    public Criteria like(String attribute, Object value) {
         criterionList.add(new Criterion(attribute, Criterion.OP_LIKE, value));
         return this;
     }
@@ -119,7 +119,7 @@ public class Criteria {
     /**
      * Add a criterion where an attribue is similar to a value (SQL similar to operator)
      */
-    public Criteria similarto(String attribute, String value) {
+    public Criteria similarto(String attribute, Object value) {
         criterionList.add(new Criterion(attribute, Criterion.OP_SIMILAR_TO, value));
         return this;
     }
@@ -127,7 +127,7 @@ public class Criteria {
     /**
      * Add a criterion where an attribue is greater than a value (SQL > operator)
      */
-    public Criteria gt(String attribute, String value) {
+    public Criteria gt(String attribute, Object value) {
         criterionList.add(new Criterion(attribute, Criterion.OP_GREATER_THAN, value));
         return this;
     }
@@ -135,7 +135,7 @@ public class Criteria {
     /**
      * Add a criterion where an attribue is less than a value (SQL < operator)
      */
-    public Criteria lt(String attribute, String value) {
+    public Criteria lt(String attribute, Object value) {
         criterionList.add(new Criterion(attribute, Criterion.OP_LESS_THAN, value));
         return this;
     }

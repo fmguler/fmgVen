@@ -44,7 +44,7 @@ public class QueryMapper {
     private NamedParameterJdbcTemplate template;
     private Set domainPackages;
     private Set dbClasses;
-    private boolean debug = true;
+    private boolean debug = false;
 
     public QueryMapper() {
         domainPackages = new HashSet();
@@ -189,5 +189,15 @@ public class QueryMapper {
      */
     public void addDomainPackage(String domainPackage) {
         domainPackages.add(domainPackage);
+    }
+
+    /**
+     * Set debug mode, true will log all debug messages to System.out
+     * <p>
+     * Note: Use debug mode to detect problems only. It is not a general purpose logging mode.
+     * @param debug set true to enable debug mode
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }
