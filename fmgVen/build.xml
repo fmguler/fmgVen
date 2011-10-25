@@ -71,4 +71,70 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <!-- we use extra ant tasks such as propertyregex and if -->
+    <taskdef  classpath="etc/lib/ant-contrib-1.0b2.jar" resource="net/sf/antcontrib/antcontrib.properties"/>
+    
+    <!--put version info i.e. SVN revision, date ve and Hudson build number (if exists) to the manifest. Important: svn must be in the path to get the revision info. You can test this by writing svn in the command line. -->
+    <target name="put-version-info">        
+    
+        <!-- get the BUILD_NUMBER value from environment or parameters (comes from hudson) and put it to build.number property, put -none- if it doesn't exist-->
+        <property environment="env" />        
+        <if>
+            <isset property="env.BUILD_NUMBER" />
+            <then>
+                <property name="build.number" value="${env.BUILD_NUMBER}" />
+            </then>
+            <elseif>
+                <isset property="BUILD_NUMBER" />
+                <then>
+                    <property name="build.number" value="${BUILD_NUMBER}" />
+                </then>
+            </elseif>
+            <else>
+                <property name="build.number" value="-none-" />
+            </else>
+        </if>
+    
+        <!-- get the info from svn and put it to svninfoprop property -->
+        <exec executable="svn" outputproperty="svninfoprop">
+            <arg line="info"/>
+        </exec>
+
+        <!-- get the revision number -->
+        <propertyregex property="revision.number" input="${svninfoprop}" select="\1">
+            <regexp pattern="Revision: ([0-9]*)"/>
+        </propertyregex>
+        <!-- get the last commit date -->
+        <propertyregex property="revision.date" input="${svninfoprop}" select="\1">
+            <regexp pattern="Last Changed Date: (.*)\+"/>
+        </propertyregex>
+        
+        <!-- copy manifest.mf template to build folder -->
+        <copy file="etc/manifest-template.mf" tofile="build/manifest.mf" />
+
+        <!-- write the values to build/manifest.mf -->
+        <replaceregexp file="build/manifest.mf" encoding="UTF-8">
+            <regexp pattern="Revision:([0-9]*)"/>
+            <substitution expression="Revision: ${revision.number}"/>
+        </replaceregexp>
+        <replaceregexp file="build/manifest.mf" encoding="UTF-8">
+            <regexp pattern="Date:(.*)"/>
+            <substitution expression="Date: ${revision.date}"/>
+        </replaceregexp>
+        <condition property="build.number" value="${build.number}" else="-none-">
+            <isset property="build.number"/>
+        </condition>
+        <replaceregexp file="build/manifest.mf" encoding="UTF-8">
+            <regexp pattern="Build:(.*)"/>
+            <substitution expression="Build: ${build.number}"/>
+        </replaceregexp>
+        
+        <echo message="Revision: ${revision.number} Date: ${revision.date} Build: ${build.number}"/>
+    </target>
+    
+    <target name="-pre-jar">
+        <!-- put the version info -->
+        <antcall target="put-version-info"/>
+    </target> 
 </project>
