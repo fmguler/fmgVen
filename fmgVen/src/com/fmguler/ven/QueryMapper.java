@@ -92,7 +92,7 @@ public class QueryMapper {
             if (id == null) return; //this object exists in the columns but null, probably because of left join
 
             //create bean wrapper for the object class
-            BeanWrapper wr = new BeanWrapperImpl(objectClass); //already caches class introspection (CachedIntrospectionResults.forClass())
+            BeanWrapperImpl wr = new BeanWrapperImpl(objectClass); //already caches class introspection (CachedIntrospectionResults.forClass())
             wr.setPropertyValue("id", id); //set the id property
             Object object = wr.getWrappedInstance();
             boolean map = true;
