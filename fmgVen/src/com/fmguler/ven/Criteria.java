@@ -42,6 +42,7 @@ import java.util.Stack;
  */
 public class Criteria {
     private StringBuffer criteriaStringBuffer = new StringBuffer(); //for string criteria
+    private StringBuffer orderStringBuffer = new StringBuffer(); //for ordering
     private LinkedList criterionList = new LinkedList(); //for typed criteria
     private Map parameters = new HashMap(); //the parameters used in criteria string
     private int limit = 20;
@@ -98,6 +99,15 @@ public class Criteria {
         return parameters;
     }
 
+    /**
+     * Return order string to SQL
+     */
+    public String orderStringToSQL() {
+        if (orderStringBuffer.length() == 0) return "";
+        orderStringBuffer.insert(0, " order by");
+        return orderStringBuffer.toString();
+    }
+
     //--------------------------------------------------------------------------
     //Typed Criteria Methods
     /**
@@ -152,7 +162,8 @@ public class Criteria {
      * Add: order by attribute asc
      */
     public Criteria orderAsc(String attribute) {
-        //Not implemented yet.
+        if (this.orderStringBuffer.length() != 0) this.orderStringBuffer.append(",");
+        this.orderStringBuffer.append(" ").append(convertAttributeToAlias(attribute)).append(" asc");
         return this;
     }
 
@@ -160,7 +171,8 @@ public class Criteria {
      * Add: order by attribute desc
      */
     public Criteria orderDesc(String attribute) {
-        //Not implemented yet.
+        if (this.orderStringBuffer.length() != 0) this.orderStringBuffer.append(",");
+        this.orderStringBuffer.append(" ").append(convertAttributeToAlias(attribute)).append(" desc");
         return this;
     }
 
@@ -222,15 +234,15 @@ public class Criteria {
                     String sr = "(" + s1 + " and " + s2 + ")";
                     stack.push(sr);
                 } else if (conn.equals(Criterion.CONN_OR)) {
-                        String s1 = (String)stack.pop();
-                        String s2 = (String)stack.pop();
-                        String sr = "(" + s1 + " or " + s2 + ")";
-                        stack.push(sr);
-                    } else if (conn.equals(Criterion.CONN_NOT)) {
-                            String s = (String)stack.pop();
-                            String sr = "not (" + s + ")";
-                            stack.push(sr);
-                        }
+                    String s1 = (String)stack.pop();
+                    String s2 = (String)stack.pop();
+                    String sr = "(" + s1 + " or " + s2 + ")";
+                    stack.push(sr);
+                } else if (conn.equals(Criterion.CONN_NOT)) {
+                    String s = (String)stack.pop();
+                    String sr = "not (" + s + ")";
+                    stack.push(sr);
+                }
             }
         }
 
@@ -283,10 +295,14 @@ public class Criteria {
                 .eq("SomeDomainObject.name", "sdo1") //attribute equals value
                 .and() //connect previous criteria with and
                 .isNull("SomeDomainObject.description") //attribute is null
-                .or(); //connect previous criteria with and
+                .or() //connect previous criteria with or
+                .orderDesc("SomeDomainObject.name"); //order by some attribute
 
         //print the resulting where clause SQL
         System.out.println(criteria.criteriaToSQL());
+
+        //print the resulting order clause SQL
+        System.out.println(criteria.orderStringToSQL());
 
         //the result is;
         //(( some_domain_object.description is null) or (( some_domain_object.name = :__p1) and ( some_domain_object_another_domain_objects.name like :__p0)))

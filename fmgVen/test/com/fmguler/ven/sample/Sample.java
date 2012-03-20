@@ -167,7 +167,8 @@ public class Sample {
         Criteria criteria = new Criteria() //criteria object
                 .like("SomeDomainObject.anotherDomainObjects.name", "a%") //attribute like value
                 .eq("SomeDomainObject.name", "sdo1") //attribute equals value
-                .and(); //connects previous criteria with and
+                .and() //connects previous criteria with and
+                .orderDesc("SomeDomainObject.anotherDomainObjects.name"); //order by some attribute
 
         //list with includes and criteria
         List objList = ven.list(SomeDomainObject.class, joins, criteria);

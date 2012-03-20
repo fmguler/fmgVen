@@ -20,6 +20,7 @@ package com.fmguler.ven;
 import com.fmguler.ven.util.Convert;
 import com.fmguler.ven.util.VenList;
 import java.beans.PropertyDescriptor;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,6 +47,7 @@ public class QueryGenerator {
         this.dbClasses.add(Date.class);
         this.dbClasses.add(Double.class);
         this.dbClasses.add(Boolean.class);
+        this.dbClasses.add(BigDecimal.class);
     }
 
     /**
@@ -90,7 +92,7 @@ public class QueryGenerator {
             String fieldName = pdArr[i].getName(); //field name
             //if (fieldName.equals("id")) continue; //remove if it does not break the sequence
             if (dbClasses.contains(fieldClass)) { //direct database field (Integer,String,Date, etc)
-                query.append(columnName);
+                query.append(columnName.equals("order")?"\"order\"":columnName);
                 query.append(",");
                 values.append(":").append(fieldName);
                 values.append(",");
@@ -128,7 +130,7 @@ public class QueryGenerator {
             String columnName = Convert.toDB(pdArr[i].getName()); //column name
             String fieldName = pdArr[i].getName(); //field name
             if (dbClasses.contains(fieldClass)) { //direct database field (Integer,String,Date, etc)
-                query.append(columnName).append("=:").append(fieldName);
+                query.append(columnName.equals("order")?"\"order\"":columnName).append("=:").append(fieldName);
                 query.append(",");
             }
             if (fieldClass.getPackage() != null && domainPackages.contains(fieldClass.getPackage().getName())) { //object

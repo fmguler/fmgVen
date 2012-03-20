@@ -52,9 +52,10 @@ public class Ven {
      * Get the object with the specified id, of the specified objectClass type.
      * <p>
      * By default none of the associations will be retrieved.
-     * To include the object associations (retrieve the object graph) joins should be specified, e.g.
+     * To include the object associations (retrieve the object graph) joins
+     * should be specified, e.g.
      * <code>SomeObject.anotherObject</code>
-     * 
+     *
      * @param id the id of the object to be retrieved
      * @param objectClass the class of the object to be retrieved
      * @param joins the set of object graphs to be included with the object
@@ -75,41 +76,67 @@ public class Ven {
     }
 
     /**
+     * Get the object with the specified id, of the specified objectClass type.
+     * <p>
+     * By default none of the associations will be retrieved.
+     * To include the object associations (retrieve the object graph) joins
+     * should be specified, e.g.
+     * <code>SomeObject.anotherObject</code>
+     *
+     * @param id the id of the object to be retrieved
+     * @param objectClass the class of the object to be retrieved
+     * @param joins the set of object graphs to be included with the object
+     * @param criteria to filter and order the result according to some criteria
+     * (e.g. for associations)
+     * @return the retrieved object including specified associations
+     */
+    public Object get(int id, Class objectClass, Set joins, Criteria criteria) {
+        String query = generator.generateSelectQuery(objectClass, joins);
+        query += " where 1=1 and " + Convert.toDB(Convert.toSimpleName(objectClass.getName())) + ".id = :___id " + criteria.criteriaStringToSQL() + " and " + criteria.criteriaToSQL() + criteria.orderStringToSQL();
+
+        criteria.getParameters().put("___id", new Integer(id));
+        if (debug) System.out.println("Ven - SQL: " + query);
+
+        List result = mapper.list(query, criteria.getParameters(), objectClass);
+        if (result.isEmpty()) return null;
+        if (result.size() > 1) System.out.println("Ven - WARNING >> get(id) returns more than one row");
+        return result.get(0);
+    }
+
+    /**
      * List the objects of the specified objectClass type.
      * <p>
      * By default none of the associations will be retrieved.
-     * To include the object associations (retrieve the object graph) joins should be specified, e.g.
+     * To include the object associations (retrieve the object graph) joins
+     * should be specified, e.g.
      * <code>SomeObject.anotherObject</code>
-     * 
+     *
      * @param objectClass the class of the objects to be retrieved
      * @param joins the set of object graphs to be included with objects
      * @return the list of objects including specified associations
      */
     public List list(Class objectClass, Set joins) {
-        String query = generator.generateSelectQuery(objectClass, joins);
-
-        Map paramMap = new HashMap();
-        if (debug) System.out.println("Ven - SQL: " + query);
-
-        List result = mapper.list(query, paramMap, objectClass);
-        return result;
+        return list(objectClass, joins, new Criteria());
     }
 
     /**
-     * List the objects of the specified objectClass type, filtering according to some criteria.
+     * List the objects of the specified objectClass type, filtering according
+     * to some criteria.
      * <p>
      * By default none of the associations will be retrieved.
-     * To include the object associations (retrieve the object graph) joins should be specified, e.g.
+     * To include the object associations (retrieve the object graph) joins
+     * should be specified, e.g.
      * <code>SomeObject.anotherObject</code>
-     * 
+     *
      * @param objectClass the class of the objects to be retrieved
      * @param joins the set of object graphs to be included with objects
      * @param criteria to filter and order the result according to some criteria
-     * @return the list of objects including the specified associations filtered according to the specified criteria
+     * @return the list of objects including the specified associations filtered
+     * according to the specified criteria
      */
     public List list(Class objectClass, Set joins, Criteria criteria) {
         String query = generator.generateSelectQuery(objectClass, joins);
-        query += " where 1=1 " + criteria.criteriaStringToSQL() + " and " + criteria.criteriaToSQL();
+        query += " where 1=1 " + criteria.criteriaStringToSQL() + " and " + criteria.criteriaToSQL() + criteria.orderStringToSQL();
 
         if (debug) System.out.println("Ven - SQL: " + query);
 
@@ -118,12 +145,13 @@ public class Ven {
     }
 
     /**
-     * Save the object. If it has a non null (or non zero) "id" property it will be updated.
+     * Save the object. If it has a non null (or non zero) "id" property it will
+     * be updated.
      * It will be inserted otherwise.
      * <p>
      * The object will be saved to a table with the same name as the object,
      * The fields of object will be mapped to the table fields.
-     * 
+     *
      * @param object the object to be saved
      */
     public void save(Object object) {
@@ -143,7 +171,8 @@ public class Ven {
     }
 
     /**
-     * Delete the the object with the specified id of the specified objectClass type
+     * Delete the the object with the specified id of the specified objectClass
+     * type
      * @param id the id of the object to be deleted
      * @param objectClass the class of the object to be deleted
      */
@@ -199,12 +228,30 @@ public class Ven {
     /**
      * Set debug mode, true will log all debug messages to System.out
      * <p>
-     * Note: Use debug mode to detect problems only. It is not a general purpose logging mode.
+     * Note: Use debug mode to detect problems only. It is not a general purpose
+     * logging mode.
      * @param debug set true to enable debug mode
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
         generator.setDebug(debug);
         mapper.setDebug(debug);
+    }
+
+    //--------------------------------------------------------------------------
+    //GETTERS
+    
+    /**
+     * @return the underlying query generator, for advanced usage.
+     */
+    public QueryGenerator getQueryGenerator() {
+        return generator;
+    }
+
+    /**
+     * @return the underlying query mapper, for advanced usage.
+     */
+    public QueryMapper getQueryMapper() {
+        return mapper;
     }
 }

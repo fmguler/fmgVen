@@ -20,6 +20,7 @@ package com.fmguler.ven;
 import com.fmguler.ven.util.Convert;
 import com.fmguler.ven.util.VenList;
 import java.beans.PropertyDescriptor;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class QueryMapper {
         this.dbClasses.add(Date.class);
         this.dbClasses.add(Double.class);
         this.dbClasses.add(Boolean.class);
+        this.dbClasses.add(BigDecimal.class);
     }
 
     /**
@@ -124,13 +126,15 @@ public class QueryMapper {
                     } else {
                         if (debug) System.out.println("--field not found: " + columnName);
                     }
+                    continue; //if this is a primitive property, it cannot be an object or list
                 }
 
                 //many to one association (object property)
-                if (map && fieldClass.getPackage() != null && domainPackages.contains(fieldClass.getPackage().getName())) {
+                if (fieldClass.getPackage() != null && domainPackages.contains(fieldClass.getPackage().getName())) {
                     if (columns.contains(columnName + "_id")) {
                         if (debug) System.out.println(">>object is found " + columnName);
                         List list = new ArrayList(1); //we know there will be single result
+                        if (!map) list.add(fieldValue); //otherwise we cannot catch one to many assc. (lists) of many to one (object) assc.
                         mapRecursively(rs, columns, columnName, fieldClass, list);
                         if (list.size() > 0) wr.setPropertyValue(pd.getName(), list.get(0));
                     } else {
@@ -150,8 +154,8 @@ public class QueryMapper {
                 }
             }
         } catch (Exception ex) {
+            System.out.println("Ven - error while mapping row, table: " + tableName + " object class: " + objectClass + " error: " + ex.getMessage());
             if (debug) {
-                System.out.println("Ven - error while mapping row; ");
                 ex.printStackTrace();
             }
         }
